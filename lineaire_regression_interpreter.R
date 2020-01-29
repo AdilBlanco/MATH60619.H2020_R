@@ -2,9 +2,31 @@ library(haven)
 library(ggpubr)
 
 df <- read_sas("./MATH60619.H2020_R/datasets/intention.sas7bdat")
-head(df)
+head(df, n=4)
+# fixation emotion  sexe   age revenu  educ statut intention
+#  0.081   1.42      1    27      1     2      0        11
+#  2.24    1.15      0    27      1     1      0        12
+#  1.68    0.296     1    26      1     2      1         6
+#  0.63    0.731     1    34      3     3      0         4
+
+dim(df)
+# [1] 120   8
 
 summary(df)
+#     fixation        emotion            sexe             age            revenu           educ      
+# Min.   :0.028   Min.   :0.0530   Min.   :0.0000   Min.   :19.00   Min.   :1.000   Min.   :1.000  
+# 1st Qu.:0.836   1st Qu.:0.7175   1st Qu.:0.0000   1st Qu.:27.00   1st Qu.:1.000   1st Qu.:1.750  
+# Median :1.307   Median :0.9260   Median :1.0000   Median :30.00   Median :2.000   Median :2.000  
+# Mean   :1.578   Mean   :1.0380   Mean   :0.5167   Mean   :30.06   Mean   :2.067   Mean   :2.042  
+# 3rd Qu.:2.066   3rd Qu.:1.3790   3rd Qu.:1.0000   3rd Qu.:33.25   3rd Qu.:3.000   3rd Qu.:3.000  
+# Max.   :5.835   Max.   :2.7970   Max.   :1.0000   Max.   :45.00   Max.   :3.000   Max.   :3.000  
+# statut         intention     
+# Min.   :0.0000   Min.   : 2.000  
+# 1st Qu.:0.0000   1st Qu.: 6.000  
+# Median :1.0000   Median : 8.000  
+# Mean   :0.5417   Mean   : 8.258  
+# 3rd Qu.:1.0000   3rd Qu.:11.000  
+# Max.   :1.0000   Max.   :14.000  
 
 # *************************************************
 # Interprétation du résultats (variable continue):#
