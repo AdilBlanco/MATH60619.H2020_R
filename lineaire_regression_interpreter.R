@@ -84,7 +84,7 @@ lm(intention ~ educ, data=df)
 #       7.114        1.652        1.595
 
 df <- read_sas("./MATH60619.H2020_R/datasets/intention.sas7bdat")
-head(df)
+head(df, n=4)
 
 lm(intention ~ 
      fixation + 
@@ -113,8 +113,40 @@ lm(intention ~
 #                   l'intention d'achat moyen chez les couples diminue de 0.2996 par 
 #                   rapport a la moyenne d'achat chez les célibataire.
 
+#*************************************************************************
+# Corrélation r: qunatifie la force de la relation linéaire entre X et Y #
+#*************************************************************************
+cor(df$intention, df$fixation)
+# [1] 0.4262547
+# La corrélation linéaire de Pearson entre intention et fixation est 0.4262547.
+cor(df$intention, df$emotion)
+# [1] 0.2347929
+# La corrélation linéaire de Pearson entre intention et emotion est 0.2347929.
+par(mfrow=c(1,2), pch=20, bty='l')
+plot(intention ~ fixation, data=df, col="red")
+plot(intention ~ emotion, data=df, col="green")
 
+#**************************************************************************
+# Coefficient de détermnation R^2:                                        #
+# + mesure la force de la relation linéaire entre fit(Y) et Y             #
+# + représente la proportion de la variabilité de Y par les regresseurs X #
+#**************************************************************************
+lmod <- lm(intention ~ fixation + emotion, data=df)
+summary(lmod)
+# Residuals:
+#        Min      1Q      Median      3Q     Max 
+#        -5.7033 -1.7601 -0.4144  2.1520  6.8140 
+# Coefficients:
+#            Estimate Std. Error   t value  Pr(>|t|)    
+# (Intercept)   5.5185     0.5990   9.212  1.56e-15 ***
+# fixation      1.0797     0.2219   4.865  3.60e-06 ***
+# emotion       0.9984     0.4544   2.197     0.03 *  
+#        ---
+#        Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
+#Residual standard error: 2.624 on 117 degrees of freedom
+#Multiple R-squared:  0.2141,	Adjusted R-squared:  0.2007 
+#F-statistic: 15.94 on 2 and 117 DF,  p-value: 7.559e-07
 
-
+# Les variables fixation et emotion expliquent plus que 20% de la varibilité d'intention. 
 
