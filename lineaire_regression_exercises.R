@@ -71,7 +71,7 @@ summary(limod)
 # F-statistic: 57.08 on 1 and 17 DF,  p-value: 7.887e-07
 
 # (f) Donne un intervalle à 95% pour la pente et interprétez ce dernier.
-confint(limod)
+confint(limod, level=0.95)
 #                   2.5 %     97.5 %
 # (Intercept) -211.120354  -74.933483
 # taille         2.810167    4.987893
