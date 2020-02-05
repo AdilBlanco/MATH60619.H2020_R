@@ -150,3 +150,40 @@ summary(lmod)
 
 # Les variables fixation et emotion expliquent plus que 20% de la varibilité d'intention. 
 
+# ****************************************************
+# Interprétation du test d'hypothèse (un paramètre): #
+# ****************************************************
+lmod <- lm(intention ~ fixation, data=df)
+summary(lmod)
+# Residuals:
+#        Min     1Q  Median     3Q    Max 
+#     -5.813 -1.828  -0.207  2.176  6.130 
+
+# Coefficients:
+#               Estimate Std.  Error   t value    Pr(>|t|)    
+#    (Intercept)   6.4532      0.4285   15.060   < 2e-16 ***
+#      fixation    1.1441      0.2235    5.119   1.21e-06 ***
+#        ---
+#        Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+# Residual standard error: 2.666 on 118 degrees of freedom
+# Multiple R-squared:  0.1817,	Adjusted R-squared:  0.1748 
+# F-statistic:  26.2 on 1 and 118 DF,  p-value: 1.209e-06
+
+confint(lmod, level=0.95)
+#                 2.5 %    97.5 %
+# (Intercept) 5.6046573  7.301720
+# fixation    0.7014641  1.586703
+
+# + La valeur de la statistique-t pour H0: β1=0 versus H1: β1<>0 est t=1.1441/0.2235=5.119.
+# + La valeur-p du test bilatéral est inférieur à 0.05 (1.21e-06 < 0.05).
+# + On rejette H0, car il y a un effet significatif de temps de fixation sur l'intention d'achat.
+# + L'intervalle de confiance à 95% pour β1, correspondant à l'effet linéaire de fixation est: [0.7014641, 1.586703].  
+# Conclusion: puisque l'intervalle ne contient pas 0, on déduit que le paramètre est significativement
+#             différent de zéro à niveau α=5%.
+
+# ************************************************************
+# Interprétation du test d'hypothèse (plusieurs paramètres): #
+# ************************************************************
+
+
