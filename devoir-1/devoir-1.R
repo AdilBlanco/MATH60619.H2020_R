@@ -60,20 +60,125 @@ abline(v=-0.28,col="red")
 # H0: tgv = rexpr
 # H1: tgv <> rexpr
 
-tgv_df <- df[df$type=="AVE-TGV", ]
-expr_df <- df[df$type=="REXPRESS", ]
+# tgv_df <- df[df$type=="AVE-TGV", ]
+# expr_df <- df[df$type=="REXPRESS", ]
 
-nrow(tgv_df)
-nrow(expr_df)
+# source('./MATH60619.H2020_R/devoir-1/rquery_t_test.r')
+# rquery.t.test(tgv_df$prix, expr_df$prix)
 
-source('./MATH60619.H2020_R/devoir-1/rquery_t_test.r')
-rquery.t.test(tgv_df$prix, expr_df$prix)
+df5 <- df[df$type=="AVE-TGV" | df$type=="REXPRESS", ]
+nrow(df5)
 
-tgv_df$prix
-expr_df$prix
+summary(df5[df5$type=="AVE-TGV", ])
+summary(df5[df5$type=="REXPRESS", ])
+tgv_df <- df5[df5$type=="AVE-TGV", ]
+expr_df <- df5[df5$type=="REXPRESS", ]
 
-par(mfrow = c(1,1)) 
-x <- seq(0, 4, 0.2)
-plot(x, dnorm(x, 2.2), type = "l")
+boxplot(df5$prix ~ df5$type, xlab = "type train")
 
-?dnorm()
+par(mfrow=c(1,2), pch=20, bty='l')
+hist(tgv_df$prix, freq = FALSE, col="cornflowerblue")
+lines(density(tgv_df$prix), lty=1, col = "red")
+hist(expr_df$prix, col="cornflowerblue")
+
+#******************************************************************************
+df6 <- df[df$type=="AVE" | df$type=="AVE-TGV", ]
+entrants <- df6[df6$dest==1, ] # madrid->barcelone
+sortants <- df6[df6$dest==0, ] # barcelone->madrid
+
+par(mfrow=c(1,3), pch=20, bty='l')
+# Vérification de la normalité des échantillons
+hist(entrants$prix, freq=FALSE, col="lightblue",
+     xlab="prix de billet en (Euro)", main="Histogramme Madrid-Barcelone", ylab="Densité")
+lines(density(entrants$prix), lty=2,col="black", lwd=1)
+lines(curve(dnorm(x, mean= mean(entrants$prix), 
+                  sd=sd(entrants$prix)), from=20, to=200, add=TRUE), col="red", lwd=2)
+
+hist(sortants$prix, freq=FALSE, col="lightblue",
+     xlab="prix de billet en (Euro)", main="Histogramme Barcelone-Madrid", ylab="Densité")
+lines(density(sortants$prix), lty=2,col="black", lwd=1)
+lines(curve(dnorm(x, mean= mean(sortants$prix), 
+                  sd=sd(sortants$prix)), from=20, to=200, add=TRUE), col="red", lwd=2)
+
+boxplot(df6$prix ~ df6$dest, xlab="Déstination", 
+        ylab = "prix de billet en (Euro)",
+        frame = FALSE)
+
+# H0: µ0 == µ1 (hypthèse null)
+# Ha: µ0 <> µ1 (hypthèse alternative)
+# + ou µ0 est le prix moyen du billet pour un train de grand vitesse allant 
+#   de barcelone à madrid et µ1 est le prix moyen du billet pour un train de 
+#   grand vitesse allant de madrid à barcelone.
+t.test(prix ~ dest, data=df6, var.equal=T, alternative='two.sided')
+# 	Two Sample t-test
+# data:  prix by dest
+# t = -2.2963, df = 9601, p-value = 0.02168
+# alternative hypothesis: true difference in means is not equal to 0
+# 95 percent confidence interval:
+#  -1.7568352 -0.1387103
+#sample estimates:
+#  mean in group 0 mean in group 1 
+#         87.38419        88.33197 
+
+# La valeur-p du test bilatéral de test-t pour deux échantillons est 0.02168.
+# On rejette l'hypothèse nulle, donc le prix moyen d'une direction est plus chère
+# que l'autre à niveau de confiance de 5%.
+mean(df6$prix[df6$dest==0]) # 87.38419 !!!!
+mean(df6$prix[df6$dest==1]) # 88.33197 !!!!
+
+wilcox.test(prix ~ dest, data=df6)
+# Wilcoxon rank sum test with continuity correction
+# data:  prix by dest
+# W = 11184249, p-value = 0.01208
+# alternative hypothesis: true location shift is not equal to 0
+
+#******************************************************************************
+df7 <- df[df$type=="AVE-TGV", ]
+unique(df7$jour)
+
+weekend <- df7[df7$jour %in% c(6, 7), ]
+weekday <- df7[df7$jour %in% c(1, 2, 3, 4, 5), ]
+df7$flag <- with(df7, ifelse(jour %in% c(6, 7), 0, 1))
+
+par(mfrow=c(1,3), pch=20, bty='l')
+# Vérification de la normalité des échantillons
+hist(weekday$prix, freq=FALSE, col="lightblue",
+     xlab="prix de billet en (Euro)", main="Histogramme jour de la semaine", ylab="Densité")
+lines(density(weekday$prix), lty=2,col="black", lwd=1)
+lines(curve(dnorm(x, mean= mean(weekday$prix), 
+                  sd=sd(weekday$prix)), from=20, to=200, add=TRUE), col="red", lwd=2)
+
+hist(weekend$prix, freq=FALSE, col="lightblue",
+     xlab="prix de billet en (Euro)", main="Histogramme fin de semaine", ylab="Densité")
+lines(density(weekend$prix), lty=2,col="black", lwd=1)
+lines(curve(dnorm(x, mean= mean(weekend$prix), 
+                  sd=sd(weekend$prix)), from=20, to=200, add=TRUE), col="red", lwd=2)
+
+boxplot(df7$prix ~ df7$flag, xlab="jours de semaine", 
+        ylab = "prix de billet en (Euro)",
+        frame = FALSE)
+
+# H0: µ0 == µ1 ~ µ0 - µ1 = 0 (hypthèse null)
+# Ha: µ0 > µ1 ~  µ0 - µ1 > 0 (hypthèse alternative)
+# + ou µ1 est le prix moyen du billet pour les trains AVE-TGV en jours de la semaine
+#   et µ0 est le prix moyen du billet pour les trains AVE-TGV en fin de semaine. 
+var(weekday$prix)
+var(weekend$prix)
+mean(weekday$prix)
+mean(weekend$prix)
+t.test(prix ~ flag, data=df7, var.equal=F, alternative='greater')
+# 	Welch Two Sample t-test
+# data:  prix by flag
+# t = 3.0033, df = 279.16, p-value = 0.001456
+# alternative hypothesis: true difference in means is greater than 0
+# 95 percent confidence interval:
+#  2.441746      Inf
+# sample estimates:
+#   mean in group 0 mean in group 1 
+#          92.74634        87.32627 
+
+# La valeur-p du test unilatérale de test Welch pour deux échantillons est 0.001456.
+# On rejette l'hypothèse nulle, donc le prix moyen du billet pour les trains AVE-TGV
+# en fin de semaine est plus chère que les jours de la semiane à niveau de confiance de 5%.
+
+#******************************************************************************
