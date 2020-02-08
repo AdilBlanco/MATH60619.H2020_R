@@ -56,3 +56,24 @@ abline(v=-0.28,col="red")
 # (4-c)
 (nrow(df4[df4$valp < 0.05, ]) / nrow(df4)) * 100
 
+# (5-a)
+# H0: tgv = rexpr
+# H1: tgv <> rexpr
+
+tgv_df <- df[df$type=="AVE-TGV", ]
+expr_df <- df[df$type=="REXPRESS", ]
+
+nrow(tgv_df)
+nrow(expr_df)
+
+source('./MATH60619.H2020_R/devoir-1/rquery_t_test.r')
+rquery.t.test(tgv_df$prix, expr_df$prix)
+
+tgv_df$prix
+expr_df$prix
+
+par(mfrow = c(1,1)) 
+x <- seq(0, 4, 0.2)
+plot(x, dnorm(x, 2.2), type = "l")
+
+?dnorm()

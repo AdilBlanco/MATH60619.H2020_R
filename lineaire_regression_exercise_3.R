@@ -114,7 +114,7 @@ pred
 
 # (i) Supposez qu’on ajuste un modèle de régression pour la masse (en kg) et la taille (en cm).  
 # Est-ce que le mod-èle linéaire serait toujours adéquat?  Expliquez en quoi le changement d’unité 
-# affecterait les estimés de vosparamètres.
+# affecterait les estimés de vos paramètres.
 
 #*****************
 #   EXERCICE-2   #
