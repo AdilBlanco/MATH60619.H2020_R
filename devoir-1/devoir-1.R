@@ -124,29 +124,27 @@ var(entrants$prix)
 # [1] 430.1997
 var(sortants$prix)
 # [1] 386.7636
-# var(entrants$prix) and var(sortants$prix) are different.
+# var(entrants$prix) et var(sortants$prix) les deux variances sont approximativement égales.
 
 # H0: µ0 == µ1 (hypthèse null)
 # Ha: µ0 <> µ1 (hypthèse alternative)
 # + ou µ0 est le prix moyen du billet pour un train de grand vitesse allant 
 #   de barcelone à madrid et µ1 est le prix moyen du billet pour un train de 
 #   grand vitesse allant de madrid à barcelone.
-t.test(prix ~ dest, data=df6, var.equal=F, alternative='two.sided')
-# 	Welch Two Sample t-test
+t.test(prix ~ dest, data=df6, var.equal=T, alternative='two.sided')
+#     Two Sample t-test
 # data:  prix by dest
-# t = -2.2984, df = 9597.7, p-value = 0.02156
+# t = -2.2963, df = 9601, p-value = 0.02168
 # alternative hypothesis: true difference in means is not equal to 0
 # 95 percent confidence interval:
-#   -1.756087 -0.139458
+#   -1.7568352 -0.1387103
 # sample estimates:
 #   mean in group 0 mean in group 1 
 #          87.38419        88.33197 
 
-# La valeur-p du test bilatéral de Welch pour deux échantillons est 0.02168.
+# La valeur-p du test bilatéral de test-t pour deux échantillons est 0.02168.
 # On rejette l'hypothèse nulle, donc le prix moyen d'une direction est plus chère
 # que l'autre à niveau de 5% pour le trajet Madrid-Barcelone et celui de Barcelone-Madrid.
-mean(df6$prix[df6$dest==0]) # 87.38419 !!!!
-mean(df6$prix[df6$dest==1]) # 88.33197 !!!!
 
 wilcox.test(prix ~ dest, data=df6)
 # Wilcoxon rank sum test with continuity correction
