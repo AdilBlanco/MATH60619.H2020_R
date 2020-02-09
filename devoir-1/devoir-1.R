@@ -124,7 +124,7 @@ var(entrants$prix)
 # [1] 430.1997
 var(sortants$prix)
 # [1] 386.7636
-# var(entrants$prix) and var(sortants$prix) the variances are different.
+# var(entrants$prix) and var(sortants$prix) are different.
 
 # H0: µ0 == µ1 (hypthèse null)
 # Ha: µ0 <> µ1 (hypthèse alternative)
