@@ -56,31 +56,51 @@ abline(v=-0.28,col="red")
 # (4-c)
 (nrow(df4[df4$valp < 0.05, ]) / nrow(df4)) * 100
 
-# (5-a)
-# H0: tgv = rexpr
-# H1: tgv <> rexpr
+#**************************************************************************************************
+#Q-5) Est-ce que le prix moyen du billet pour un train de classe AVE-TGV est le même que REXPRESS #
+#**************************************************************************************************
+# a)
+# select AVE-TGV and REXPRESS train
+df5 <- df[df$type!="AVE", ]
+ave_tgv <- df[df$type=="AVE-TGV", ]
 
-# tgv_df <- df[df$type=="AVE-TGV", ]
-# expr_df <- df[df$type=="REXPRESS", ]
+par(mfrow=c(2,3), pch=20, bty='l')
+# histogram plot ticket prices for AVE-TGV train.
+hist(ave_tgv$prix, freq=FALSE, col="lightblue",
+     xlab="ticket price (Euro)", main="AVE-TGV Histogram", ylab="density")
+lines(density(ave_tgv$prix), lty=2,col="black", lwd=1)
+lines(curve(dnorm(x, mean= mean(ave_tgv$prix), 
+                  sd=sd(ave_tgv$prix)), from=20, to=200, add=TRUE), col="red", lwd=2)
+# Normal Quantile-Q plot ticket prices for AVE-TGV train.
+qqnorm(ave_tgv$prix, pch=1, main="AVE-TGV Normal Q-Q plot", frame=FALSE)
+qqline(ave_tgv$prix, col="steelblue", lwd=2)
+# Box plot ticket prices for AVE-TGV train
+boxplot(ave_tgv$prix ~ ave_tgv$type, 
+        horizontal=TRUE, 
+        col="lightblue", 
+        xlab="ticket price (Euro)", 
+        ylab="type",
+        main="Train types",
+        frame=FALSE)
 
-# source('./MATH60619.H2020_R/devoir-1/rquery_t_test.r')
-# rquery.t.test(tgv_df$prix, expr_df$prix)
+# H0: µ0 == µ (hypthèse null)
+# Ha: µ0 > µ (hypthèse alternative)
+# + ou µ0 est le prix moyen du billet pour un train de type AVE-TGV 
+#   et µ est le prix moyen de la population.
+t.test(ave_tgv$prix, data=ave_tgv, alternative="greater")
+# One Sample t-test
+# data:  ave_tgv$prix
+# t = 98.403, df = 428, p-value < 2.2e-16
+# alternative hypothesis: true mean is not equal to 0
+# 95 percent confidence interval:
+#   87.39137      Inf
+# sample estimates:
+#   mean of x 
+# 88.88028 
 
-df5 <- df[df$type=="AVE-TGV" | df$type=="REXPRESS", ]
-nrow(df5)
-
-summary(df5[df5$type=="AVE-TGV", ])
-summary(df5[df5$type=="REXPRESS", ])
-tgv_df <- df5[df5$type=="AVE-TGV", ]
-expr_df <- df5[df5$type=="REXPRESS", ]
-
-boxplot(df5$prix ~ df5$type, xlab = "type train")
-
-par(mfrow=c(1,2), pch=20, bty='l')
-hist(tgv_df$prix, freq = FALSE, col="cornflowerblue")
-lines(density(tgv_df$prix), lty=1, col = "red")
-hist(expr_df$prix, col="cornflowerblue")
-
+# La valeur-p du test unilatéral de test-t pour un échantillon simple est 2.2e-16.
+# On rejette l'hypothèse nulle, donc le prix moyen de ticket pour un train AVE-TGV 
+# n'est le même que RESXPRESS.
 #*****************************************************************************************************
 #Q-6) Est-ce que le prix d'une direction est plus chère que l'autre pour les trains à grande vitesse #
 #*****************************************************************************************************
@@ -194,7 +214,7 @@ qqline(weekday$prix, col="steelblue", lwd=2)
 # Normal Qiantile-Q plot weekend ticket prices.
 qqnorm(weekend$prix, pch=1, main="Weekend Normal Q-Q plot", frame=FALSE)
 qqline(weekend$prix, col="steelblue", lwd=2)
-# Box plot ticket prices for both destination
+# Box plot ticket prices for group weekday and weekend
 boxplot(df7$prix ~ df7$is_weekend, 
         horizontal=TRUE, 
         col="lightblue", 
@@ -215,7 +235,7 @@ wilcox.test(prix ~ is_weekend, data=df7)
 
 # La valeur-p du test Wilcoxon pour deux échantillons est 0.0006852
 # On rejette l'hypothèse nulle, donc le prix moyen du billet pour les trains AVE-TGV
-# en fin de semaine est plus chère que les jours de la semiane à niveau de confiance de 5%.
+# en fin de semaine est plus chère que les jours de la semiane à niveau de 5%.
 
 #********************************************************************************************************
 #Q-8) Expliquer le prix des billets 'Promo' pour les trains à grande vitesse en fonction de destination, 
