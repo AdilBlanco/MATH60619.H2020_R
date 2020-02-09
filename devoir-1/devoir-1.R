@@ -81,14 +81,17 @@ hist(tgv_df$prix, freq = FALSE, col="cornflowerblue")
 lines(density(tgv_df$prix), lty=1, col = "red")
 hist(expr_df$prix, col="cornflowerblue")
 
-#******************************************************************************
+#*****************************************************************************************************
+#Q-6) Est-ce que le prix d'une direction est plus chère que l'autre pour les trains à grande vitesse #
+#*****************************************************************************************************
+
 df6 <- df[df$type=="AVE" | df$type=="AVE-TGV", ]
 entrants <- df6[df6$dest==1, ] # madrid->barcelone
 sortants <- df6[df6$dest==0, ] # barcelone->madrid
 
-#**************************
+#***************************
 #  Normality verification  #
-#**************************
+#***************************
 par(mfrow=c(3,2), pch=20, bty='l')
 # histogram plot ticket prices for destination (1) Madrid->Barcelone.
 hist(entrants$prix, freq=FALSE, col="lightblue",
@@ -152,52 +155,65 @@ wilcox.test(prix ~ dest, data=df6)
 # W = 11184249, p-value = 0.01208
 # alternative hypothesis: true location shift is not equal to 0
 
-#******************************************************************************
+#********************************************************************************************************
+#Q-7) Est-ce que le prix la fin de semaine est plus chère que les jours semaine pour les trains AVE-TGV #
+#********************************************************************************************************
+
 df7 <- df[df$type=="AVE-TGV", ]
-unique(df7$jour)
 
 weekend <- df7[df7$jour %in% c(6, 7), ]
 weekday <- df7[df7$jour %in% c(1, 2, 3, 4, 5), ]
-df7$flag <- with(df7, ifelse(jour %in% c(6, 7), 0, 1))
+df7$is_weekend <- with(df7, ifelse(jour %in% c(6, 7), 1, 0))
+head(df7, n=5)
+#       prix    type     classe tarif dest duree jour is_weekend
+# 5    68.95 AVE-TGV Preferente Promo    0   175    4          0
+# 90   98.00 AVE-TGV Preferente Promo    0   175    1          0
+# 100  98.00 AVE-TGV Preferente Promo    0   175    7          1
+# 101 112.55 AVE-TGV Preferente Promo    0   175    1          0
+# 109  98.00 AVE-TGV Preferente Promo    0   175    7          1
 
-par(mfrow=c(1,3), pch=20, bty='l')
-# Vérification de la normalité des échantillons
+#***************************
+#  Normality verification  #
+#***************************
+par(mfrow=c(3,2), pch=20, bty='l')
+# histogram plot weekdays ticket prices.
 hist(weekday$prix, freq=FALSE, col="lightblue",
-     xlab="prix de billet en (Euro)", main="Histogramme jour de la semaine", ylab="Densité")
+     xlab="ticket price (Euro)", main="Weekday Histogram", ylab="density")
 lines(density(weekday$prix), lty=2,col="black", lwd=1)
 lines(curve(dnorm(x, mean= mean(weekday$prix), 
                   sd=sd(weekday$prix)), from=20, to=200, add=TRUE), col="red", lwd=2)
-
+# # histogram plot weekend ticket prices.
 hist(weekend$prix, freq=FALSE, col="lightblue",
-     xlab="prix de billet en (Euro)", main="Histogramme fin de semaine", ylab="Densité")
+     xlab="ticket price (Euro)", main="Weekend Histogram", ylab="density")
 lines(density(weekend$prix), lty=2,col="black", lwd=1)
 lines(curve(dnorm(x, mean= mean(weekend$prix), 
                   sd=sd(weekend$prix)), from=20, to=200, add=TRUE), col="red", lwd=2)
-
-boxplot(df7$prix ~ df7$flag, xlab="jours de semaine", 
-        ylab = "prix de billet en (Euro)",
-        frame = FALSE)
+# Normal Qiantile-Q plot weekdays ticket prices.
+qqnorm(weekday$prix, pch=1, main="Weekday Normal Q-Q plot", frame=FALSE)
+qqline(weekday$prix, col="steelblue", lwd=2)
+# Normal Qiantile-Q plot weekend ticket prices.
+qqnorm(weekend$prix, pch=1, main="Weekend Normal Q-Q plot", frame=FALSE)
+qqline(weekend$prix, col="steelblue", lwd=2)
+# Box plot ticket prices for both destination
+boxplot(df7$prix ~ df7$is_weekend, 
+        horizontal=TRUE, 
+        col="lightblue", 
+        xlab="ticket price (Euro)", 
+        ylab="is weekend",
+        main="Weekday-weekend prices",
+        frame=FALSE)
 
 # H0: µ0 == µ1 ~ µ0 - µ1 = 0 (hypthèse null)
 # Ha: µ0 > µ1 ~  µ0 - µ1 > 0 (hypthèse alternative)
 # + ou µ1 est le prix moyen du billet pour les trains AVE-TGV en jours de la semaine
 #   et µ0 est le prix moyen du billet pour les trains AVE-TGV en fin de semaine. 
-var(weekday$prix)
-var(weekend$prix)
-mean(weekday$prix)
-mean(weekend$prix)
-t.test(prix ~ flag, data=df7, var.equal=F, alternative='greater')
-# 	Welch Two Sample t-test
-# data:  prix by flag
-# t = 3.0033, df = 279.16, p-value = 0.001456
-# alternative hypothesis: true difference in means is greater than 0
-# 95 percent confidence interval:
-#  2.441746      Inf
-# sample estimates:
-#   mean in group 0 mean in group 1 
-#          92.74634        87.32627 
+wilcox.test(prix ~ is_weekend, data=df7)
+# Wilcoxon rank sum test with continuity correction
+# data:  prix by is_weekend
+# W = 14922, p-value = 0.0006852
+# alternative hypothesis: true location shift is not equal to 0
 
-# La valeur-p du test unilatérale de test Welch pour deux échantillons est 0.001456.
+# La valeur-p du test Wilcoxon pour deux échantillons est 0.0006852
 # On rejette l'hypothèse nulle, donc le prix moyen du billet pour les trains AVE-TGV
 # en fin de semaine est plus chère que les jours de la semiane à niveau de confiance de 5%.
 
