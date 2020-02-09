@@ -217,9 +217,13 @@ wilcox.test(prix ~ is_weekend, data=df7)
 # On rejette l'hypothèse nulle, donc le prix moyen du billet pour les trains AVE-TGV
 # en fin de semaine est plus chère que les jours de la semiane à niveau de confiance de 5%.
 
-#******************************************************************************
+#********************************************************************************************************
+#Q-8) Expliquer le prix des billets 'Promo' pour les trains à grande vitesse en fonction de destination, 
+#     classe, duree et une variable additionelle indiquant si le jour est une fin de semaine ou pas.
+#********************************************************************************************************
+
 df8 <- df[(df$type=="AVE" | df$type=="AVE-TGV") & (df$tarif=="Promo"), ]
-df8$weekend <- with(df8, ifelse(jour %in% c(6, 7), 1, 0))
+df8$is_weekend <- with(df8, ifelse(jour %in% c(6, 7), 1, 0))
 head(df8, n=5)
 #     prix    type     classe tarif dest duree jour weekend
 # 1 143.40     AVE Preferente Promo    0   190    6       1
@@ -232,9 +236,8 @@ head(df8, n=5)
 # prix = β0 + β1.dest + β2.classe + β3.duree + β4.weekend + E
 
 # (8-b)
-class(df8$classe)
 df8$classe <- factor(df8$classe)
-mod <- lm(prix ~ dest + classe + duree + weekend, data=df8)
+mod <- lm(prix ~ dest + classe + duree + is_weekend, data=df8)
 summary(mod)
 # Residuals:
 #   Min      1Q    Median      3Q     Max 
@@ -255,8 +258,7 @@ summary(mod)
 # Multiple R-squared:  0.206,	Adjusted R-squared:  0.2054 
 # F-statistic: 348.1 on 6 and 8052 DF,  p-value: < 2.2e-16
 
-# prix_^ = 135.34 + 0.44.dest_^ + ((-17.76) + (-6.93) + (-9.07)).classe_^ + (-0.23).duree_^ 
-#          + (-0.41).weekend_^
+# prix_^ = 135.34 + 0.44.dest_^ + (-17.76 - 6.93 - 9.07).classe_^ - 0.23.duree_^ - 0.41.weekend_^
 
 # dest (binaire): En fixant toutes les autres co-variables, toutes choses étant égales, 
 #                 le prix moyen du trajet Madrid->Barcelone augmente de 0.44 par rapport 
@@ -266,7 +268,6 @@ summary(mod)
 #                   du prix en moyenne.
 # weekend (binaire): En fixant toutes les autres co-variables, toutes choses étant égales,
 #                    le prix moyen en fin de semaine diminue de 0.41 par rappot au jour semaine.
-#
 #
 # # (8-c)
 #***************
@@ -358,7 +359,7 @@ summary(mod4)
 #*************
 # Le modele  #
 #*************
-mod <- lm(prix ~ dest + classe + duree + weekend, data=df8)
+mod <- lm(prix ~ dest + classe + duree + is_weekend, data=df8)
 summary(mod)
 # Residuals:
 #   Min      1Q    Median      3Q     Max 
@@ -380,7 +381,3 @@ summary(mod)
 
 par(mfrow = c(2,2)) 
 plot(mod)
-
-
-
-# prix = β0 + β1.dest + β2.classe + β3.duree + β4.weekend + E
