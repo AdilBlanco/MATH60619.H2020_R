@@ -86,43 +86,65 @@ df6 <- df[df$type=="AVE" | df$type=="AVE-TGV", ]
 entrants <- df6[df6$dest==1, ] # madrid->barcelone
 sortants <- df6[df6$dest==0, ] # barcelone->madrid
 
-par(mfrow=c(1,3), pch=20, bty='l')
-# Vérification de la normalité des échantillons
+#**************************
+#  Normality verification  #
+#**************************
+par(mfrow=c(3,2), pch=20, bty='l')
+# histogram plot ticket prices for destination (1) Madrid->Barcelone.
 hist(entrants$prix, freq=FALSE, col="lightblue",
-     xlab="prix de billet en (Euro)", main="Histogramme Madrid-Barcelone", ylab="Densité")
+     xlab="ticket price (Euro)", main="Madrid-Barcelone Histogram", ylab="density")
 lines(density(entrants$prix), lty=2,col="black", lwd=1)
 lines(curve(dnorm(x, mean= mean(entrants$prix), 
                   sd=sd(entrants$prix)), from=20, to=200, add=TRUE), col="red", lwd=2)
-
+# histogram plot ticket prices for destination (0) Barcelone->Madrid.
 hist(sortants$prix, freq=FALSE, col="lightblue",
-     xlab="prix de billet en (Euro)", main="Histogramme Barcelone-Madrid", ylab="Densité")
+     xlab="ticket price (Euro)", main="Barcelone-Madrid Histogram", ylab="density")
 lines(density(sortants$prix), lty=2,col="black", lwd=1)
 lines(curve(dnorm(x, mean= mean(sortants$prix), 
                   sd=sd(sortants$prix)), from=20, to=200, add=TRUE), col="red", lwd=2)
+# Normal Qiantile-Q plot ticket prices for destination (1) Madrid->Barcelone.
+qqnorm(entrants$prix, pch=1, main="Madrid-Barcelone Normal Q-Q plot", frame=FALSE)
+qqline(entrants$prix, col="steelblue", lwd=2)
+# Normal Qiantile-Q plot ticket prices for destination (0) Barcelone->Madrid.
+qqnorm(sortants$prix, pch=1, main="Barcelone-Madrid Normal Q-Q plot", frame=FALSE)
+qqline(sortants$prix, col="steelblue", lwd=2)
+# Box plot ticket prices for both destination
+boxplot(df6$prix ~ df6$dest, 
+        horizontal=TRUE, 
+        col="lightblue", 
+        xlab="ticket price (Euro)", 
+        ylab="destination",
+        main="Destinations prices",
+        frame=FALSE)
 
-boxplot(df6$prix ~ df6$dest, xlab="Déstination", 
-        ylab = "prix de billet en (Euro)",
-        frame = FALSE)
+#**********************************
+#  homoscedasticity verification  #
+#**********************************
+var(entrants$prix) 
+# [1] 430.1997
+var(sortants$prix)
+# [1] 386.7636
+# var(entrants$prix) and var(sortants$prix) the variances are different.
 
 # H0: µ0 == µ1 (hypthèse null)
 # Ha: µ0 <> µ1 (hypthèse alternative)
 # + ou µ0 est le prix moyen du billet pour un train de grand vitesse allant 
 #   de barcelone à madrid et µ1 est le prix moyen du billet pour un train de 
 #   grand vitesse allant de madrid à barcelone.
-t.test(prix ~ dest, data=df6, var.equal=T, alternative='two.sided')
-# 	Two Sample t-test
+t.test(prix ~ dest, data=df6, var.equal=F, alternative='two.sided')
+# 	Welch Two Sample t-test
 # data:  prix by dest
-# t = -2.2963, df = 9601, p-value = 0.02168
+# t = -2.2984, df = 9597.7, p-value = 0.02156
 # alternative hypothesis: true difference in means is not equal to 0
 # 95 percent confidence interval:
-#  -1.7568352 -0.1387103
-#sample estimates:
-#  mean in group 0 mean in group 1 
-#         87.38419        88.33197 
+#   -1.756087 -0.139458
+# sample estimates:
+#   mean in group 0 mean in group 1 
+#          87.38419        88.33197 
 
-# La valeur-p du test bilatéral de test-t pour deux échantillons est 0.02168.
+# La valeur-p du test bilatéral de Welch pour deux échantillons est 0.02168.
 # On rejette l'hypothèse nulle, donc le prix moyen d'une direction est plus chère
-# que l'autre à niveau de confiance de 5%.
+# que l'autre à niveau de 5% pour le trajet Madrid-Barcelone et celui de Barcelone-Madrid.
 mean(df6$prix[df6$dest==0]) # 87.38419 !!!!
 mean(df6$prix[df6$dest==1]) # 88.33197 !!!!
 
