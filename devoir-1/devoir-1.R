@@ -233,15 +233,15 @@ boxplot(df7$prix ~ df7$is_weekend,
 # Ha: µ0 > µ1 ~  µ0 - µ1 > 0 (hypthèse alternative)
 # + ou µ1 est le prix moyen du billet pour les trains AVE-TGV en jours de la semaine
 #   et µ0 est le prix moyen du billet pour les trains AVE-TGV en fin de semaine. 
-wilcox.test(prix ~ is_weekend, data=df7)
+wilcox.test(prix ~ is_weekend, data=df7, alternative="greater")
 # Wilcoxon rank sum test with continuity correction
 # data:  prix by is_weekend
-# W = 14922, p-value = 0.0006852
-# alternative hypothesis: true location shift is not equal to 0
+# W = 14922, p-value = 0.9997
+# alternative hypothesis: true location shift is greater than 0
 
-# La valeur-p du test Wilcoxon pour deux échantillons est 0.0006852
-# On rejette l'hypothèse nulle, donc le prix moyen du billet pour les trains AVE-TGV
-# en fin de semaine est plus chère que les jours de la semiane à niveau de 5%.
+# La valeur-p du test unilatéral de Wilcoxon pour deux échantillons est 0.9997
+# On ne rejette pas l'hypothèse nulle, donc le prix moyen du billet pour les trains AVE-TGV
+# en fin de semaine n'est plus chère que les jours de la semiane à niveau de 5%.
 
 #********************************************************************************************************
 #Q-8) Expliquer le prix des billets 'Promo' pour les trains à grande vitesse en fonction de destination, 
