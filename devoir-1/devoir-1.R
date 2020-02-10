@@ -53,12 +53,14 @@ head(df4, n=4)
 
 # a) 
 (nrow(df4[(df4$icbi < -0.28) & (df4$icbs > -0.28), ]) / nrow(df4)) * 100
+# [1] 94.7
 # b)
 par(mfrow=c(1,1), pch=20, bty='l')
 hist(df4$difmoy, col="cornflowerblue")
 abline(v=-0.28,col="red")
 # c)
 (nrow(df4[df4$valp < 0.05, ]) / nrow(df4)) * 100
+# [1] 10.5
 
 #**************************************************************************************************
 #Q-5) Est-ce que le prix moyen du billet pour un train de classe AVE-TGV est le même que REXPRESS #
