@@ -39,6 +39,10 @@ summary(df1k)
 # Non ça ne serait pas un bon échantillon vu l'abscence des classes "TuristaPlus" et "TuristaSolo" 
 # ainsi l'échantillon contient que les trajets Barcelone vers Madrid (0).
 
+#*************************************************************************************************************
+#Q-4) Comparaison les tarifs moyennes pour les train à grande vitesse pour les deux déstinations (simulation)#
+#*************************************************************************************************************
+
 df4 <- read.csv("./MATH60619.H2020_R/devoir-1/renfe_simu_fr.csv", header=TRUE)
 head(df4, n=4)
 #     difmoy     statW        icbi       icbs       valp
@@ -47,19 +51,19 @@ head(df4, n=4)
 # 3 -0.7291113 -1.824994 -1.51223959 0.05401705 0.06803169
 # 4 -0.5833163 -1.448819 -1.37252279 0.20589020 0.14741949
 
-# (4-a) 
+# a) 
 (nrow(df4[(df4$icbi < -0.28) & (df4$icbs > -0.28), ]) / nrow(df4)) * 100
-# (4-b)
+# b)
 par(mfrow=c(1,1), pch=20, bty='l')
 hist(df4$difmoy, col="cornflowerblue")
 abline(v=-0.28,col="red")
-# (4-c)
+# c)
 (nrow(df4[df4$valp < 0.05, ]) / nrow(df4)) * 100
 
 #**************************************************************************************************
 #Q-5) Est-ce que le prix moyen du billet pour un train de classe AVE-TGV est le même que REXPRESS #
 #**************************************************************************************************
-# a)
+
 # select AVE-TGV and REXPRESS train
 df5 <- df[df$type!="AVE", ]
 ave_tgv <- df[df$type=="AVE-TGV", ]
