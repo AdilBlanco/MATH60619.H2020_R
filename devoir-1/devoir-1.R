@@ -79,7 +79,7 @@ lines(curve(dnorm(x, mean= mean(ave_tgv$prix),
 qqnorm(ave_tgv$prix, pch=1, main="AVE-TGV Normal Q-Q plot", frame=FALSE)
 qqline(ave_tgv$prix, col="steelblue", lwd=2)
 # Box plot ticket prices for AVE-TGV train
-boxplot(ave_tgv$prix ~ ave_tgv$type, 
+boxplot(df5$prix ~ df5$type, 
         horizontal=TRUE, 
         col="lightblue", 
         xlab="ticket price (Euro)", 
@@ -87,10 +87,12 @@ boxplot(ave_tgv$prix ~ ave_tgv$type,
         main="Train types",
         frame=FALSE)
 
-# H0: µ0 == µ (hypthèse null)
-# Ha: µ0 > µ (hypthèse alternative)
-# + ou µ0 est le prix moyen du billet pour un train de type AVE-TGV 
-#   et µ est le prix moyen de la population.
+mean(df[df$type=="REXPRESS", ]$prix)
+# [1] 43.25
+
+# H0: µ0 == 43.25 (hypthèse null)
+# Ha: µ0 > 43.25  (hypthèse alternative)
+# + ou µ0 est le prix moyen du billet pour un train de type AVE-TGV.
 t.test(ave_tgv$prix, data=ave_tgv, alternative="greater")
 # One Sample t-test
 # data:  ave_tgv$prix
@@ -104,7 +106,7 @@ t.test(ave_tgv$prix, data=ave_tgv, alternative="greater")
 
 # La valeur-p du test unilatéral de test-t pour un échantillon simple est 2.2e-16.
 # On rejette l'hypothèse nulle, donc le prix moyen de ticket pour un train AVE-TGV 
-# n'est le même que RESXPRESS.
+# n'est pas le même que RESXPRESS.
 #*****************************************************************************************************
 #Q-6) Est-ce que le prix d'une direction est plus chère que l'autre pour les trains à grande vitesse #
 #*****************************************************************************************************
