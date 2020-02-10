@@ -68,7 +68,7 @@ abline(v=-0.28,col="red")
 df5 <- df[df$type!="AVE", ]
 ave_tgv <- df[df$type=="AVE-TGV", ]
 
-par(mfrow=c(2,3), pch=20, bty='l')
+par(mfrow=c(2,2), pch=20, bty='l')
 # histogram plot ticket prices for AVE-TGV train.
 hist(ave_tgv$prix, freq=FALSE, col="lightblue",
      xlab="ticket price (Euro)", main="AVE-TGV Histogram", ylab="density")
@@ -78,13 +78,13 @@ lines(curve(dnorm(x, mean= mean(ave_tgv$prix),
 # Normal Quantile-Q plot ticket prices for AVE-TGV train.
 qqnorm(ave_tgv$prix, pch=1, main="AVE-TGV Normal Q-Q plot", frame=FALSE)
 qqline(ave_tgv$prix, col="steelblue", lwd=2)
-# Box plot ticket prices for AVE-TGV train
+# Box plot ticket prices for AVE-TGV / REXPRESS train
 boxplot(df5$prix ~ df5$type, 
         horizontal=TRUE, 
         col="lightblue", 
         xlab="ticket price (Euro)", 
         ylab="type",
-        main="Train types",
+        main="AVE-TGV / REXPRESS",
         frame=FALSE)
 
 mean(df[df$type=="REXPRESS", ]$prix)
