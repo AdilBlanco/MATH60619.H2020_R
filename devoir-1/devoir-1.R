@@ -1,3 +1,6 @@
+#******************************************************************************************************
+#Q-2) Est-ce que c serait un bon échantillion si on conserve seulement les 1000 première observations #
+#******************************************************************************************************
 
 df <- read.csv("./MATH60619.H2020_R/devoir-1/renfe_fr.csv", header=TRUE)
 head(df, n=4)
@@ -20,11 +23,6 @@ summary(df)
 # Mean   : 86.1                   TuristaSolo:  78                    Mean   :0.5062   Mean   :185.8  
 # 3rd Qu.:100.4                                                       3rd Qu.:1.0000   3rd Qu.:190.0  
 # Max.   :214.2                                                       Max.   :1.0000   Max.   :562.0  
-
-ave <- df[df$type == "AVE", ]
-tgv <- df[df$type == "AVE-TGV", ]
-express <- df[df$type == "REXPRESS", ]
-
 
 df1k <- df[1:1000,]
 summary(df1k)
