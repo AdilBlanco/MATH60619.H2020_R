@@ -1,5 +1,5 @@
 #******************************************************************************************************
-#Q-2) Est-ce que c serait un bon échantillion si on conserve seulement les 1000 première observations #
+#Q-2) Est-ce que ce serait un bon échantillion si on conserve seulement les 1000 première observations #
 #******************************************************************************************************
 
 df <- read.csv("./MATH60619.H2020_R/devoir-1/renfe_fr.csv", header=TRUE)
