@@ -95,38 +95,3 @@ summary(mod3)
 # Residual standard error: 4.375 on 388 degrees of freedom
 # Multiple R-squared:  0.6882,	Adjusted R-squared:  0.6858 
 # F-statistic: 285.5 on 3 and 388 DF,  p-value: < 2.2e-16
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
