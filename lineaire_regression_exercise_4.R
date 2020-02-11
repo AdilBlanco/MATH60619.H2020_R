@@ -3,6 +3,47 @@ library(haven)
 #*****************
 #   EXERCICE-1   #
 #*****************
+df1 <- read_sas("./MATH60619.H2020_R/datasets/intention.sas7bdat")
+head(df1, n=4)
+#   fixation emotion  sexe   age revenu  educ statut intention
+# 1    0.081   1.42      1    27      1     2      0        11
+# 2    2.24    1.15      0    27      1     1      0        12
+# 3    1.68    0.296     1    26      1     2      1         6
+# 4    0.63    0.731     1    34      3     3      0         4
+
+unique(df1$revenu)
+# [1] 1 3 2
+# (1) [0, 20 000]
+# (2) [20 000, 60 000] 
+# (3) 60 000et plus.
+
+levels(as.factor(df1$revenu))
+df1$revenu <- factor(df1$revenu)
+df1$revenu <- relevel(df1$revenu, ref="3")
+
+mod1 <- lm(intention ~ revenu, data=df1)
+summary(mod1)
+#Residuals:
+#   Min      1Q  Median      3Q     Max 
+# -6.3095 -1.6000 -0.3095  2.4000  5.6905 
+# Coefficients:
+#               Estimate Std. Error t value Pr(>|t|)    
+# (Intercept)     7.1163     0.4243  16.771  < 2e-16 ***
+#   revenu1       2.4837     0.6334   3.921 0.000149 ***
+#   revenu2       1.1932     0.6036   1.977 0.050420 .  
+# ---
+#   Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+# Residual standard error: 2.782 on 117 degrees of freedom
+# Multiple R-squared:  0.1163,	Adjusted R-squared:  0.1012 
+# F-statistic: 7.698 on 2 and 117 DF,  p-value: 0.0007229
+par(mfrow = c(2,2))
+plot(mod1)
+
+# (b)
+newdata <- data.frame(revenu=factor(c(3)))
+pred <- predict(object=mod1,  newdata=newdata)
+pred
+
 
 #*****************
 #   EXERCICE-2   #
