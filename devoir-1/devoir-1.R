@@ -407,3 +407,13 @@ summary(mod)
 
 par(mfrow = c(2,2)) 
 plot(mod)
+# 1) Risiduals vs Fitted (Linéarité - indépendnce): 
+# Les résidus ne suivent pas une forme quadratique, les résidus sont bien éparpillés autour de la ligne.
+# 2) Normal Q-Q (normalité):
+# Les résidus sont bien alignés sur la ligne droite. 
+# 3) Scale-Location (homoscédasticité):
+# La variance devrait être constante
+# La ligne horizontale avec des points répartis également.!?
+# 4) Residuals vs Leverage: 
+# Notre graphique ne montre aucun cas influent, car aucuns des points se trouve 
+# en dehors de la distance de Cook.
