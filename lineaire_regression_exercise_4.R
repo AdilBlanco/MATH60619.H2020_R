@@ -11,8 +11,8 @@ library(haven)
 # On considère un modèle linéaire liant la consommation d’essence (en miles au gallon) 
 # des voitures en fonction de leur puissance (en watts).
 
-df <- read_sas("./MATH60619.H2020_R/datasets/automobile.sas7bdat")
-head(df, n=4)
+df4 <- read_sas("./MATH60619.H2020_R/datasets/automobile.sas7bdat")
+head(df4, n=4)
 
 #   consommation cylindre deplacement puissance masse acceleration annee origine     nom                      
 #1        18        8         307       130     3504       12       70       1   chevrolet chevelle malibu
@@ -20,19 +20,19 @@ head(df, n=4)
 #3        18        8         318       150     3436       11       70       1   plymouth satellite       
 #4        16        8         304       150     3433       12       70       1   amc rebel sst 
 
-dim(df)
+dim(df4)
 # [1] 392   9
 
 # a) consommation = β 0+ β1.puissance + E
 par(mfrow = c(1,1)) 
-plot(consommation ~ puissance, data=df)
+plot(consommation ~ puissance, data=df4)
 # Il semble y avoir une forte relation entre la variable explicative (puissance) 
 # et la variable expliqué (consommation), quand la puissance augmente la consommation
 # diminue.
 
 # b) 
 par(mfrow = c(2,2))
-mod1 <- lm(consommation ~ puissance, data=df)
+mod1 <- lm(consommation ~ puissance, data=df4)
 abline(mod1, col="red")
 plot(mod1)
 
@@ -57,7 +57,7 @@ summary(mod1)
 df$puissance2 <- df$puissance^2
 
 par(mfrow = c(2,2))
-mod2 <- lm(consommation ~ puissance + puissance2, data=df)
+mod2 <- lm(consommation ~ puissance + puissance2, data=df4)
 plot(mod2)
 
 summary(mod2)
@@ -78,7 +78,7 @@ summary(mod2)
 # d) consommation = β0 + β1.puissance + β2.puissance2 + β3.puissance3 + E
 df$puissance3 <- df$puissance^3
 par(mfrow = c(2,2))
-mod3 <- lm(consommation ~ puissance + puissance2 + puissance3, data=df)
+mod3 <- lm(consommation ~ puissance + puissance2 + puissance3, data=df4)
 plot(mod3)
 summary(mod3)
 # Residuals:
