@@ -1,6 +1,9 @@
-#******************************************************************************************************
-#Q-2) Est-ce que ce serait un bon échantillion si on conserve seulement les 1000 première observations #
-#******************************************************************************************************
+#*******************************************************************************************
+#Q-1) Analyse exploratoire des données renf afin:                                          #                     
+#     + d'évaluer graphiquement les facteurs déterminant les prix et le temps de parcours  #
+#     + de déterminer les caractéristiques distinctives des types de train.                #
+#     + d'établir s'il y a des diffèrences entre les différents tarifs                     #
+#*******************************************************************************************
 
 df <- read.csv("./MATH60619.H2020_R/devoir-1/renfe_fr.csv", header=TRUE)
 head(df, n=4)
@@ -22,7 +25,39 @@ summary(df)
 # Median : 85.1   REXPRESS: 397   TuristaPlus:1916   Promo    :8059   Median :1.0000   Median :170.0  
 # Mean   : 86.1                   TuristaSolo:  78                    Mean   :0.5062   Mean   :185.8  
 # 3rd Qu.:100.4                                                       3rd Qu.:1.0000   3rd Qu.:190.0  
-# Max.   :214.2                                                       Max.   :1.0000   Max.   :562.0  
+# Max.   :214.2                                                       Max.   :1.0000   Max.   :562.0 
+
+ave <- df[df$type=="AVE", ]
+tgv <- df[df$type=="AVE-TGV", ]
+exp <- df[df$type=="REXPRESS", ]
+
+summary(ave)
+#          prix         type              classe           tarif           duree      
+# Min.   : 32.30   AVE     :9174   Preferente : 779   AdultoIda:   0   Min.   :150.0  
+# 1st Qu.: 75.40   AVE-TGV :   0   Turista    :6501   Flexible :1446   1st Qu.:150.0  
+# Median : 85.10   REXPRESS:   0   TuristaPlus:1817   Promo    :7728   Median :167.0  
+# Mean   : 87.82                   TuristaSolo:  77                    Mean   :170.4  
+# 3rd Qu.:100.40                                                       3rd Qu.:190.0  
+# Max.   :214.20                                                       Max.   :194.0  
+summary(tgv)
+# prix              type             classe          tarif              duree      
+# Min.   : 40.95   AVE     :  0   Preferente : 30   AdultoIda:  0   Min.   :175.0  
+# 1st Qu.: 75.40   AVE-TGV :429   Turista    :299   Flexible : 98   1st Qu.:175.0  
+# Median : 85.10   REXPRESS:  0   TuristaPlus: 99   Promo    :331   Median :179.0  
+# Mean   : 88.88                  TuristaSolo:  1                   Mean   :177.1  
+# 3rd Qu.:102.15                                                    3rd Qu.:179.0  
+# Max.   :181.50                                                    Max.   :179.0  
+summary(exp)
+#       prix             type             classe     tarif            duree    
+# Min.   :43.25   AVE     :  0   Preferente :  0   AdultoIda:397   Min.   :544  
+# 1st Qu.:43.25   AVE-TGV :  0   Turista    :397   Flexible :  0   1st Qu.:544  
+# Median :43.25   REXPRESS:397   TuristaPlus:  0   Promo    :  0   Median :544  
+# Mean   :43.25                  TuristaSolo:  0                   Mean   :552  
+# 3rd Qu.:43.25                                                    3rd Qu.:562  
+# Max.   :43.25                                                    Max.   :562
+#******************************************************************************************************
+#Q-2) Est-ce que ce serait un bon échantillion si on conserve seulement les 1000 première observations #
+#******************************************************************************************************
 
 df1k <- df[1:1000,]
 summary(df1k)
