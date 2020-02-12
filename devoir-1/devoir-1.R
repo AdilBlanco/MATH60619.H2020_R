@@ -48,10 +48,57 @@ tarif_percent <- df %>% group_by(tarif) %>% summarise(n = n()) %>% mutate(freq =
 # 1 AdultoIda   397  0.0397
 # 2 Flexible   1544  0.154 
 # 3 Promo      8059  0.806 
+jour_percent <- df %>% group_by(jour) %>% summarise(n = n()) %>% mutate(freq = n / sum(n))
+# jour      n    freq
+# <int>    <int> <dbl>
+# 1     1  1282  0.128
+# 2     2  1499  0.150
+# 3     3  1604  0.160
+# 4     4  1521  0.152
+# 5     5  1573  0.157
+# 6     6  1520  0.152
+# 7     7  1001  0.100
 par(mfrow=c(2, 2))
-pie(type_percent$freq, labels=type_percent$type, radius = 1.4, main="Pie Chart of Type") 
-pie(classe_percent$freq, labels=classe_percent$classe, radius = 1.4, main="Pie Chart of Classe") 
-pie(tarif_percent$freq, labels=tarif_percent$tarif, radius = 1.4, main="Pie Chart of Tarif") 
+# type
+pie(type_percent$freq, 
+    labels=type_percent$freq*100, 
+    radius=1.2, 
+    col=c("aquamarine", "antiquewhite", "cornflowerblue"), 
+    main="Type proportion") 
+legend("topright", 
+       legend=type_percent$type, 
+       fill=c("aquamarine", "antiquewhite", "cornflowerblue"), 
+       adj = c(0, 0), cex=0.4)
+# classe
+pie(classe_percent$freq, 
+    labels=classe_percent$freq*100, 
+    radius = 1.2, 
+    col=c("aquamarine", "antiquewhite", "cornflowerblue", "darkcyan"),
+    main="Classe proportion") 
+legend("topright", 
+       legend=classe_percent$classe, 
+       fill=c("aquamarine", "antiquewhite", "cornflowerblue", "darkcyan"), 
+       adj = c(0, 0), cex=0.4)
+# tarif
+pie(tarif_percent$freq, 
+    labels=tarif_percent$freq*100, 
+    radius = 1.2, 
+    col=c("aquamarine", "antiquewhite", "cornflowerblue"),
+    main="Tarif proportion") 
+legend("topright", 
+       legend=tarif_percent$tarif, 
+       fill=c("aquamarine", "antiquewhite", "cornflowerblue"), 
+       adj = c(0, 0), cex=0.4)
+# jour
+pie(jour_percent$freq, 
+    labels=jour_percent$freq*100, 
+    radius = 1.2, 
+    col=c("aquamarine", "antiquewhite", "cornflowerblue", "darkcyan", "coral"),
+    main="Day proportion") 
+legend("topright", 
+       legend=jour_percent$jour, 
+       fill=c("aquamarine", "antiquewhite", "cornflowerblue", "darkcyan", "coral"),
+       adj = c(0, 0), cex=0.4)
 #*******************************
 # Facteurs déterminant le prix #
 #*******************************
