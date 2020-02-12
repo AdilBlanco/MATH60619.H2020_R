@@ -1,3 +1,5 @@
+library(ggplot2)
+library(dplyr)
 #*******************************************************************************************
 #Q-1) Analyse exploratoire des données renf afin:                                          #                     
 #     + d'évaluer graphiquement les facteurs déterminant les prix et le temps de parcours  #
@@ -27,34 +29,205 @@ summary(df)
 # 3rd Qu.:100.4                                                       3rd Qu.:1.0000   3rd Qu.:190.0  
 # Max.   :214.2                                                       Max.   :1.0000   Max.   :562.0 
 
-ave <- df[df$type=="AVE", ]
-tgv <- df[df$type=="AVE-TGV", ]
-exp <- df[df$type=="REXPRESS", ]
+type_percent <- df %>% group_by(type) %>% summarise(n = n()) %>% mutate(freq = n / sum(n))
+# type         n    freq
+# <fct>      <int>  <dbl>
+# 1 AVE       9174  0.917 
+# 2 AVE-TGV    429  0.0429
+# 3 REXPRESS   397  0.0397
+classe_percent <- df %>% group_by(classe) %>% summarise(n = n()) %>% mutate(freq = n / sum(n))
+# classe          n    freq
+# <fct>       <int>    <dbl>
+# 1 Preferente    809  0.0809
+# 2 Turista      7197  0.720 
+# 3 TuristaPlus  1916  0.192 
+# 4 TuristaSolo    78  0.0078
+tarif_percent <- df %>% group_by(tarif) %>% summarise(n = n()) %>% mutate(freq = n / sum(n))
+# tarif         n    freq
+# <fct>       <int>  <dbl>
+# 1 AdultoIda   397  0.0397
+# 2 Flexible   1544  0.154 
+# 3 Promo      8059  0.806 
+par(mfrow=c(2, 2))
+pie(type_percent$freq, labels=type_percent$type, radius = 1.4, main="Pie Chart of Type") 
+pie(classe_percent$freq, labels=classe_percent$classe, radius = 1.4, main="Pie Chart of Classe") 
+pie(tarif_percent$freq, labels=tarif_percent$tarif, radius = 1.4, main="Pie Chart of Tarif") 
+#*******************************
+# Facteurs déterminant le prix #
+#*******************************
+par(mfrow=c(3, 2))
+boxplot(prix ~ type, 
+        data=df,
+        boxwex=.3,      # determines the width of the box  
+        staplewex=.6,   # determines the width of the whisker
+        col="lightblue", 
+        xlab="type", 
+        ylab="ticket price (Euro)",
+        main="Trains types",
+        frame=FALSE)
+boxplot(prix ~ classe, 
+        data=df,
+        boxwex=.3,      # determines the width of the box  
+        staplewex=.6,   # determines the width of the whisker
+        col="lightblue", 
+        xlab="class", 
+        ylab="ticket price (Euro)",
+        main="Trains classes",
+        frame=FALSE)
+boxplot(prix ~ tarif, 
+        data=df,
+        boxwex=.3,      # determines the width of the box  
+        staplewex=.6,   # determines the width of the whisker
+        col="lightblue", 
+        xlab="tarif", 
+        ylab="ticket price (Euro)",
+        main="Trains tarifs",
+        frame=FALSE)
+boxplot(prix ~ dest, 
+        data=df,
+        boxwex=.3,      # determines the width of the box  
+        staplewex=.6,   # determines the width of the whisker
+        col="lightblue", 
+        xlab="destination", 
+        ylab="ticket price (Euro)",
+        main="Trains destinations",
+        frame=FALSE)
+boxplot(prix ~ jour,
+        data=df,
+        boxwex=.3,      # determines the width of the box  
+        staplewex=.6,   # determines the width of the whisker
+        col="lightblue", 
+        xlab="day", 
+        ylab="ticket price (Euro)",
+        main="Trains days",
+        frame=FALSE)
+#********************************************
+# Facteurs déterminant le temps de parcours #
+#********************************************
+par(mfrow=c(3, 2))
+boxplot(duree ~ type, 
+        data=df,
+        boxwex=.4,      # determines the width of the box  
+        staplewex=.6,   # determines the width of the whisker
+        col="lightblue", 
+        xlab="type", 
+        ylab="travel time (minute)",
+        main="Trains types",
+        frame=FALSE)
+boxplot(duree ~ classe,
+        data=df,
+        boxwex=.4,      # determines the width of the box  
+        staplewex=.6,   # determines the width of the whisker
+        col="lightblue", 
+        xlab="class", 
+        ylab="travel time (minute)",
+        main="Trains classes",
+        frame=FALSE)
+boxplot(duree ~ tarif,
+        data=df,
+        boxwex=.4,      # determines the width of the box  
+        staplewex=.6,   # determines the width of the whisker
+        col="lightblue", 
+        xlab="tarif", 
+        ylab="travel time (minute)",
+        main="Trains tarifs",
+        frame=FALSE)
+boxplot(duree ~ dest,
+        data=df,
+        boxwex=.4,      # determines the width of the box  
+        staplewex=.6,   # determines the width of the whisker
+        col="lightblue", 
+        xlab="destination", 
+        ylab="travel time (minute)",
+        main="Trains destinations",
+        frame=FALSE)
+boxplot(duree ~ jour,
+        data=df,
+        boxwex=.4,      # determines the width of the box  
+        staplewex=.6,   # determines the width of the whisker
+        col="lightblue", 
+        xlab="day", 
+        ylab="travel time (minute)",
+        main="Trains days",
+        frame=FALSE)
 
-summary(ave)
-#          prix         type              classe           tarif           duree      
+# ave <- df[df$type=="AVE", ]
+# tgv <- df[df$type=="AVE-TGV", ]
+# exp <- df[df$type=="REXPRESS", ]
+
+# summary(ave)
+#          prix         type          classe            tarif             duree      
 # Min.   : 32.30   AVE     :9174   Preferente : 779   AdultoIda:   0   Min.   :150.0  
 # 1st Qu.: 75.40   AVE-TGV :   0   Turista    :6501   Flexible :1446   1st Qu.:150.0  
 # Median : 85.10   REXPRESS:   0   TuristaPlus:1817   Promo    :7728   Median :167.0  
 # Mean   : 87.82                   TuristaSolo:  77                    Mean   :170.4  
 # 3rd Qu.:100.40                                                       3rd Qu.:190.0  
 # Max.   :214.20                                                       Max.   :194.0  
-summary(tgv)
-# prix              type             classe          tarif              duree      
-# Min.   : 40.95   AVE     :  0   Preferente : 30   AdultoIda:  0   Min.   :175.0  
-# 1st Qu.: 75.40   AVE-TGV :429   Turista    :299   Flexible : 98   1st Qu.:175.0  
-# Median : 85.10   REXPRESS:  0   TuristaPlus: 99   Promo    :331   Median :179.0  
-# Mean   : 88.88                  TuristaSolo:  1                   Mean   :177.1  
-# 3rd Qu.:102.15                                                    3rd Qu.:179.0  
-# Max.   :181.50                                                    Max.   :179.0  
-summary(exp)
-#       prix             type             classe     tarif            duree    
-# Min.   :43.25   AVE     :  0   Preferente :  0   AdultoIda:397   Min.   :544  
-# 1st Qu.:43.25   AVE-TGV :  0   Turista    :397   Flexible :  0   1st Qu.:544  
-# Median :43.25   REXPRESS:397   TuristaPlus:  0   Promo    :  0   Median :544  
-# Mean   :43.25                  TuristaSolo:  0                   Mean   :552  
-# 3rd Qu.:43.25                                                    3rd Qu.:562  
-# Max.   :43.25                                                    Max.   :562
+# summary(tgv)
+# prix              type             classe             tarif             duree      
+# Min.   : 40.95   AVE     :  0    Preferente : 30    AdultoIda:  0   Min.   :175.0  
+# 1st Qu.: 75.40   AVE-TGV :429    Turista    :299    Flexible : 98   1st Qu.:175.0  
+# Median : 85.10   REXPRESS:  0    TuristaPlus: 99    Promo    :331   Median :179.0  
+# Mean   : 88.88                   TuristaSolo:  1                    Mean   :177.1  
+# 3rd Qu.:102.15                                                      3rd Qu.:179.0  
+# Max.   :181.50                                                      Max.   :179.0  
+# summary(exp)
+#       prix             type        classe             tarif            duree    
+# Min.   :43.25   AVE     :  0     Preferente :  0    AdultoIda:397   Min.   :544  
+# 1st Qu.:43.25   AVE-TGV :  0     Turista    :397    Flexible :  0   1st Qu.:544  
+# Median :43.25   REXPRESS:397     TuristaPlus:  0    Promo    :  0   Median :544  
+# Mean   :43.25                    TuristaSolo:  0                    Mean   :552  
+# 3rd Qu.:43.25                                                       3rd Qu.:562  
+# Max.   :43.25                                                       Max.   :562
+
+# ptyp_clas_agg <- aggregate(prix ~ type + classe, data=df, length)
+#       type      classe prix
+# 1      AVE  Preferente  779
+# 2  AVE-TGV  Preferente   30
+# 3      AVE     Turista 6501
+# 4  AVE-TGV     Turista  299
+# 5 REXPRESS     Turista  397
+# 6      AVE TuristaPlus 1817
+# 7  AVE-TGV TuristaPlus   99
+# 8      AVE TuristaSolo   77
+# 9  AVE-TGV TuristaSolo    1
+# ptyp_tar_agg <- aggregate(prix ~ type + tarif, data=df, length)
+#       type     tarif prix
+# 1 REXPRESS AdultoIda  397
+# 2      AVE  Flexible 1446
+# 3  AVE-TGV  Flexible   98
+# 4      AVE     Promo 7728
+# 5  AVE-TGV     Promo  331
+# dtyp_clas_agg <- aggregate(duree ~ type + classe, data=df, mean)
+#       type      classe    duree
+# 1      AVE  Preferente 173.3030
+# 2  AVE-TGV  Preferente 176.7333
+# 3      AVE     Turista 169.0075
+# 4  AVE-TGV     Turista 176.8863
+# 5 REXPRESS     Turista 552.0252
+# 6      AVE TuristaPlus 173.8569
+# 7  AVE-TGV TuristaPlus 177.6667
+# 8      AVE TuristaSolo 175.5974
+# 9  AVE-TGV TuristaSolo 175.0000
+# dtyp_tar_agg <- aggregate(duree ~ type + tarif, data=df, mean)
+#       type     tarif    duree
+# 1 REXPRESS AdultoIda 552.0252
+# 2      AVE  Flexible 172.3071
+# 3  AVE-TGV  Flexible 177.2857
+# 4      AVE     Promo 170.0290
+# 5  AVE-TGV     Promo 176.9819
+
+# p1 <- ggplot2::ggplot(data=ptyp_clas_agg, aes(x=type, fill=classe))
+# p1 <- p1 + geom_bar(aes(y=(..count..)/sum(..count..))) + theme_light()
+# p2 <- ggplot2::ggplot(data=ptyp_tar_agg, aes(x=type, fill=tarif))
+# p2 <- p2 + geom_bar(aes(y=(..count..)/sum(..count..))) + theme_light()
+# gridExtra::grid.arrange(p1, p2, ncol=2, nrow=2)
+# p3 <- ggplot2::ggplot(data=dtyp_clas_agg, aes(x=type, fill=classe))
+# p3 <- p3 + geom_bar(aes(y=duree), stat = "identity") + theme_light()
+# p4 <- ggplot2::ggplot(data=dtyp_tar_agg, aes(x=type, fill=tarif))
+# p4 <- p4 + geom_bar(aes(y=(..count..)/sum(..count..))) + theme_light()
+# gridExtra::grid.arrange(p3, p4, ncol=2, nrow=2)
+
 #******************************************************************************************************
 #Q-2) Est-ce que ce serait un bon échantillion si on conserve seulement les 1000 première observations #
 #******************************************************************************************************
