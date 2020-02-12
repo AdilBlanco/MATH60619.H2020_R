@@ -8,17 +8,18 @@ library(dplyr)
 #*******************************************************************************************
 
 df <- read.csv("./MATH60619.H2020_R/devoir-1/renfe_fr.csv", header=TRUE)
+df$is_weekend <- with(df, ifelse(jour %in% c(6, 7), 1, 0))
 head(df, n=4)
-#    prix type     classe    tarif dest duree jour
-# 1 143.4  AVE Preferente    Promo    0   190    6
-# 2 181.5  AVE Preferente Flexible    0   190    2
-# 3  86.8  AVE Preferente    Promo    0   165    7
-# 4  86.8  AVE Preferente    Promo    0   190    7
+#    prix type     classe    tarif dest duree jour is_weekend
+# 1 143.4  AVE Preferente    Promo    0   190    6          1
+# 2 181.5  AVE Preferente Flexible    0   190    2          0
+# 3  86.8  AVE Preferente    Promo    0   165    7          1
+# 4  86.8  AVE Preferente    Promo    0   190    7          1
 
 dim(df)
-# [1] 10000     7
+# [1] 10000     8
 colnames(df)
-# [1] "prix"   "type"   "classe" "tarif"  "dest"   "duree"  "jour"  
+# [1] "prix"   "type"   "classe" "tarif"  "dest"   "duree"  "jour"  "is_weekend"
 
 summary(df)
 #      prix             type              classe           tarif           dest            duree      
@@ -48,56 +49,52 @@ tarif_percent <- df %>% group_by(tarif) %>% summarise(n = n()) %>% mutate(freq =
 # 1 AdultoIda   397  0.0397
 # 2 Flexible   1544  0.154 
 # 3 Promo      8059  0.806 
-jour_percent <- df %>% group_by(jour) %>% summarise(n = n()) %>% mutate(freq = n / sum(n))
-# jour      n    freq
-# <int>    <int> <dbl>
-# 1     1  1282  0.128
-# 2     2  1499  0.150
-# 3     3  1604  0.160
-# 4     4  1521  0.152
-# 5     5  1573  0.157
-# 6     6  1520  0.152
-# 7     7  1001  0.100
+jour_percent <- df %>% group_by(is_weekend) %>% summarise(n = n()) %>% mutate(freq = n / sum(n))
+#  is_weekend   n  freq
+#     <dbl>  <int> <dbl>
+# 1      0   7479  0.748
+# 2      1   2521  0.252
 par(mfrow=c(2, 2))
+colors <- c("aquamarine", "antiquewhite", "cornflowerblue")
 # type
 pie(type_percent$freq, 
     labels=type_percent$freq*100, 
     radius=1.2, 
-    col=c("aquamarine", "antiquewhite", "cornflowerblue"), 
+    col=colors, 
     main="Type proportion") 
 legend("topright", 
        legend=type_percent$type, 
-       fill=c("aquamarine", "antiquewhite", "cornflowerblue"), 
+       fill=colors, 
        adj = c(0, 0), cex=0.4)
 # classe
 pie(classe_percent$freq, 
     labels=classe_percent$freq*100, 
     radius = 1.2, 
-    col=c("aquamarine", "antiquewhite", "cornflowerblue", "darkcyan"),
+    col=colors,
     main="Classe proportion") 
 legend("topright", 
        legend=classe_percent$classe, 
-       fill=c("aquamarine", "antiquewhite", "cornflowerblue", "darkcyan"), 
+       fill=colors, 
        adj = c(0, 0), cex=0.4)
 # tarif
 pie(tarif_percent$freq, 
     labels=tarif_percent$freq*100, 
     radius = 1.2, 
-    col=c("aquamarine", "antiquewhite", "cornflowerblue"),
+    col=colors,
     main="Tarif proportion") 
 legend("topright", 
        legend=tarif_percent$tarif, 
-       fill=c("aquamarine", "antiquewhite", "cornflowerblue"), 
+       fill=colors, 
        adj = c(0, 0), cex=0.4)
 # jour
 pie(jour_percent$freq, 
     labels=jour_percent$freq*100, 
     radius = 1.2, 
-    col=c("aquamarine", "antiquewhite", "cornflowerblue", "darkcyan", "coral"),
+    col=colors,
     main="Day proportion") 
 legend("topright", 
-       legend=jour_percent$jour, 
-       fill=c("aquamarine", "antiquewhite", "cornflowerblue", "darkcyan", "coral"),
+       legend=jour_percent$is_weekend, 
+       fill=colors,
        adj = c(0, 0), cex=0.4)
 #*******************************
 # Facteurs déterminant le prix #
