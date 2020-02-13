@@ -6,9 +6,9 @@ library(dplyr)
 #     + de déterminer les caractéristiques distinctives des types de train.                #
 #     + d'établir s'il y a des diffèrences entre les différents tarifs                     #
 #*******************************************************************************************
-
+# fin de semaine 1 et 7
 df <- read.csv("./MATH60619.H2020_R/devoir-1/renfe_fr.csv", header=TRUE)
-df$is_weekend <- with(df, ifelse(jour %in% c(6, 7), 1, 0))
+df$is_weekend <- with(df, ifelse(jour %in% c(1, 7), 1, 0))
 head(df, n=4)
 #    prix type     classe    tarif dest duree jour is_weekend
 # 1 143.4  AVE Preferente    Promo    0   190    6          1
@@ -145,6 +145,15 @@ boxplot(prix ~ jour,
         ylab="ticket price (Euro)",
         main="Trains days",
         frame=FALSE)
+boxplot(prix ~ is_weekend,
+        data=df,
+        boxwex=.3,      # determines the width of the box  
+        staplewex=.6,   # determines the width of the whisker
+        col="lightblue", 
+        xlab="is_wekend", 
+        ylab="ticket price (Euro)",
+        main="Trains weekends",
+        frame=FALSE)
 #********************************************
 # Facteurs déterminant le temps de parcours #
 #********************************************
@@ -194,6 +203,17 @@ boxplot(duree ~ jour,
         ylab="travel time (minute)",
         main="Trains days",
         frame=FALSE)
+boxplot(prix ~ is_weekend,
+        data=df,
+        boxwex=.4,      # determines the width of the box  
+        staplewex=.6,   # determines the width of the whisker
+        col="lightblue", 
+        xlab="is_wekend", 
+        ylab="travel time (minute)",
+        main="Trains weekends",
+        frame=FALSE)
+
+# pairs(~prix + type + classe + tarif + dest + duree + jour, data=df, main="Simple Scatterplot Matrix")
 
 # ave <- df[df$type=="AVE", ]
 # tgv <- df[df$type=="AVE-TGV", ]
@@ -294,6 +314,7 @@ summary(df1k)
 #*************************************************************************************************************
 
 df4 <- read.csv("./MATH60619.H2020_R/devoir-1/renfe_simu_fr.csv", header=TRUE)
+# df4 <- df # copy dataframe
 head(df4, n=4)
 #     difmoy     statW        icbi       icbs       valp
 # 1 -0.4818434 -1.174404 -1.28609052 0.32240363 0.24026152
@@ -306,7 +327,11 @@ head(df4, n=4)
 # [1] 94.7
 # b)
 par(mfrow=c(1,1), pch=20, bty='l')
-hist(df4$difmoy, col="cornflowerblue")
+hist(df4$difmoy, 
+     col="cornflowerblue",
+     xlab="means differences",
+     ylab="frequency" ,
+     main="Means differences Histogram")
 abline(v=-0.28,col="red")
 # c)
 (nrow(df4[df4$valp < 0.05, ]) / nrow(df4)) * 100
@@ -343,20 +368,20 @@ mean(df[df$type=="REXPRESS", ]$prix)
 # [1] 43.25
 
 # H0: µ0 == 43.25 (hypthèse null)
-# Ha: µ0 > 43.25  (hypthèse alternative)
+# Ha: µ0 <> 43.25  (hypthèse alternative)
 # + ou µ0 est le prix moyen du billet pour un train de type AVE-TGV.
-t.test(ave_tgv$prix, data=ave_tgv, alternative="greater")
-# One Sample t-test
+t.test(ave_tgv$prix, data=ave_tgv, alternative='two.sided', mu=43.25, conf.level=0.9)
+# 	One Sample t-test
 # data:  ave_tgv$prix
-# t = 98.403, df = 428, p-value < 2.2e-16
-# alternative hypothesis: true mean is not equal to 0
-# 95 percent confidence interval:
-#   87.39137      Inf
+# t = 50.519, df = 428, p-value < 2.2e-16
+# alternative hypothesis: true mean is not equal to 43.25
+# 90 percent confidence interval:
+#         87.39137 90.36918
 # sample estimates:
-#   mean of x 
+#         mean of x 
 # 88.88028 
 
-# La valeur-p du test unilatéral de test-t pour un échantillon simple est 2.2e-16.
+# La valeur-p du test bilatéral de test-t pour un échantillon simple est 2.2e-16.
 # On rejette l'hypothèse nulle, donc le prix moyen de ticket pour un train AVE-TGV 
 # n'est pas le même que RESXPRESS.
 #*****************************************************************************************************
@@ -398,32 +423,56 @@ boxplot(df6$prix ~ df6$dest,
         main="Destinations prices",
         frame=FALSE)
 
+shapiro.test(entrants$prix)
+# Shapiro-Wilk normality test
+# data:  entrants$prix
+# W = 0.92469, p-value < 2.2e-16
+shapiro.test(sortants$prix)
+# Shapiro-Wilk normality test
+# data:  sortants$prix
+# W = 0.92412, p-value < 2.2e-16
+
 #**********************************
 #  homoscedasticity verification  #
 #**********************************
-var(entrants$prix) 
-# [1] 430.1997
-var(sortants$prix)
-# [1] 386.7636
-# var(entrants$prix) et var(sortants$prix) les deux variances sont approximativement égales.
+var.test(entrants$prix, sortants$prix, alternative="two.sided")
+# F test to compare two variances
+# data:  entrants$prix and sortants$prix
+# F = 1.1123, num df = 4884, denom df = 4717, p-value = 0.0002293
+# alternative hypothesis: true ratio of variances is not equal to 1
+# 95 percent confidence interval:
+#         1.051092 1.177052
+# sample estimates:
+#         ratio of variances 
+# 1.112307 
+
+# H0: var(entrants) == var(sortants)
+# Ha: var(entrants) <> var(sortants)
+# + var(entrants) est la variance de la destination madrid->barcelone (1)
+#   et var(sortants) est la variance de la destination bqrcelone->madrid (0) 
+# La valeur-p du test bilatéral de test-F pour les deux échantillons est 0.0002293.
+# On rejette l'hypothèse nulle, donc la variance de la destination madrid->barcelone
+# est différente que la variance de la destination barcelone->madrid à niveau de 5%.
 
 # H0: µ0 == µ1 (hypthèse null)
 # Ha: µ0 <> µ1 (hypthèse alternative)
 # + ou µ0 est le prix moyen du billet pour un train de grand vitesse allant 
 #   de barcelone à madrid et µ1 est le prix moyen du billet pour un train de 
 #   grand vitesse allant de madrid à barcelone.
-t.test(prix ~ dest, data=df6, var.equal=T, alternative='two.sided')
-#     Two Sample t-test
+
+# fp.test(entrants$prix, sortants$prix, delta = 0, alternative = "two.sided")
+t.test(prix ~ dest, data=df6, var.equal=F, alternative='two.sided')
+# 	Welch Two Sample t-test
 # data:  prix by dest
-# t = -2.2963, df = 9601, p-value = 0.02168
+# t = -2.2984, df = 9597.7, p-value = 0.02156
 # alternative hypothesis: true difference in means is not equal to 0
 # 95 percent confidence interval:
-#   -1.7568352 -0.1387103
+#     -1.756087 -0.139458
 # sample estimates:
-#   mean in group 0 mean in group 1 
-#          87.38419        88.33197 
+#     mean in group 0 mean in group 1 
+#       87.38419        88.33197 
 
-# La valeur-p du test bilatéral de test-t pour deux échantillons est 0.02168.
+# La valeur-p du test bilatéral de test Welch pour deux échantillons est 0.02156.
 # On rejette l'hypothèse nulle, donc le prix moyen d'une direction est plus chère
 # que l'autre à niveau de 5% pour le trajet Madrid-Barcelone et celui de Barcelone-Madrid.
 
@@ -438,10 +487,10 @@ wilcox.test(prix ~ dest, data=df6)
 #********************************************************************************************************
 
 df7 <- df[df$type=="AVE-TGV", ]
-
-weekend <- df7[df7$jour %in% c(6, 7), ]
-weekday <- df7[df7$jour %in% c(1, 2, 3, 4, 5), ]
-df7$is_weekend <- with(df7, ifelse(jour %in% c(6, 7), 1, 0))
+# df$is_weekend <- with(df, ifelse(jour %in% c(1, 7), 1, 0))
+weekend <- df7[df7$is_weekend==1, ]
+weekday <- df7[df7$is_weekend==0, ]
+# df7$is_weekend <- with(df7, ifelse(jour %in% c(1, 7), 1, 0))
 head(df7, n=5)
 #       prix    type     classe tarif dest duree jour is_weekend
 # 5    68.95 AVE-TGV Preferente Promo    0   175    4          0
@@ -450,6 +499,15 @@ head(df7, n=5)
 # 101 112.55 AVE-TGV Preferente Promo    0   175    1          0
 # 109  98.00 AVE-TGV Preferente Promo    0   175    7          1
 
+# x <- rnorm(100, mean = 5, sd = 3)
+# y <- runif(100, min = 2, max = 4)
+# par(mfrow=c(2,2), pch=20, bty='l')
+# hist(x)
+# qqnorm(x, pch=1)
+# hist(y)
+# qqnorm(y, pch=1)
+# shapiro.test(x)
+# shapiro.test(y)
 #***************************
 #  Normality verification  #
 #***************************
