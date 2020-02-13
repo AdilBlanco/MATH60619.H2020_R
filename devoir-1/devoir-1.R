@@ -213,85 +213,6 @@ boxplot(prix ~ is_weekend,
         main="Trains weekends",
         frame=FALSE)
 
-# pairs(~prix + type + classe + tarif + dest + duree + jour, data=df, main="Simple Scatterplot Matrix")
-
-# ave <- df[df$type=="AVE", ]
-# tgv <- df[df$type=="AVE-TGV", ]
-# exp <- df[df$type=="REXPRESS", ]
-
-# summary(ave)
-#          prix         type          classe            tarif             duree      
-# Min.   : 32.30   AVE     :9174   Preferente : 779   AdultoIda:   0   Min.   :150.0  
-# 1st Qu.: 75.40   AVE-TGV :   0   Turista    :6501   Flexible :1446   1st Qu.:150.0  
-# Median : 85.10   REXPRESS:   0   TuristaPlus:1817   Promo    :7728   Median :167.0  
-# Mean   : 87.82                   TuristaSolo:  77                    Mean   :170.4  
-# 3rd Qu.:100.40                                                       3rd Qu.:190.0  
-# Max.   :214.20                                                       Max.   :194.0  
-# summary(tgv)
-# prix              type             classe             tarif             duree      
-# Min.   : 40.95   AVE     :  0    Preferente : 30    AdultoIda:  0   Min.   :175.0  
-# 1st Qu.: 75.40   AVE-TGV :429    Turista    :299    Flexible : 98   1st Qu.:175.0  
-# Median : 85.10   REXPRESS:  0    TuristaPlus: 99    Promo    :331   Median :179.0  
-# Mean   : 88.88                   TuristaSolo:  1                    Mean   :177.1  
-# 3rd Qu.:102.15                                                      3rd Qu.:179.0  
-# Max.   :181.50                                                      Max.   :179.0  
-# summary(exp)
-#       prix             type        classe             tarif            duree    
-# Min.   :43.25   AVE     :  0     Preferente :  0    AdultoIda:397   Min.   :544  
-# 1st Qu.:43.25   AVE-TGV :  0     Turista    :397    Flexible :  0   1st Qu.:544  
-# Median :43.25   REXPRESS:397     TuristaPlus:  0    Promo    :  0   Median :544  
-# Mean   :43.25                    TuristaSolo:  0                    Mean   :552  
-# 3rd Qu.:43.25                                                       3rd Qu.:562  
-# Max.   :43.25                                                       Max.   :562
-
-# ptyp_clas_agg <- aggregate(prix ~ type + classe, data=df, length)
-#       type      classe prix
-# 1      AVE  Preferente  779
-# 2  AVE-TGV  Preferente   30
-# 3      AVE     Turista 6501
-# 4  AVE-TGV     Turista  299
-# 5 REXPRESS     Turista  397
-# 6      AVE TuristaPlus 1817
-# 7  AVE-TGV TuristaPlus   99
-# 8      AVE TuristaSolo   77
-# 9  AVE-TGV TuristaSolo    1
-# ptyp_tar_agg <- aggregate(prix ~ type + tarif, data=df, length)
-#       type     tarif prix
-# 1 REXPRESS AdultoIda  397
-# 2      AVE  Flexible 1446
-# 3  AVE-TGV  Flexible   98
-# 4      AVE     Promo 7728
-# 5  AVE-TGV     Promo  331
-# dtyp_clas_agg <- aggregate(duree ~ type + classe, data=df, mean)
-#       type      classe    duree
-# 1      AVE  Preferente 173.3030
-# 2  AVE-TGV  Preferente 176.7333
-# 3      AVE     Turista 169.0075
-# 4  AVE-TGV     Turista 176.8863
-# 5 REXPRESS     Turista 552.0252
-# 6      AVE TuristaPlus 173.8569
-# 7  AVE-TGV TuristaPlus 177.6667
-# 8      AVE TuristaSolo 175.5974
-# 9  AVE-TGV TuristaSolo 175.0000
-# dtyp_tar_agg <- aggregate(duree ~ type + tarif, data=df, mean)
-#       type     tarif    duree
-# 1 REXPRESS AdultoIda 552.0252
-# 2      AVE  Flexible 172.3071
-# 3  AVE-TGV  Flexible 177.2857
-# 4      AVE     Promo 170.0290
-# 5  AVE-TGV     Promo 176.9819
-
-# p1 <- ggplot2::ggplot(data=ptyp_clas_agg, aes(x=type, fill=classe))
-# p1 <- p1 + geom_bar(aes(y=(..count..)/sum(..count..))) + theme_light()
-# p2 <- ggplot2::ggplot(data=ptyp_tar_agg, aes(x=type, fill=tarif))
-# p2 <- p2 + geom_bar(aes(y=(..count..)/sum(..count..))) + theme_light()
-# gridExtra::grid.arrange(p1, p2, ncol=2, nrow=2)
-# p3 <- ggplot2::ggplot(data=dtyp_clas_agg, aes(x=type, fill=classe))
-# p3 <- p3 + geom_bar(aes(y=duree), stat = "identity") + theme_light()
-# p4 <- ggplot2::ggplot(data=dtyp_tar_agg, aes(x=type, fill=tarif))
-# p4 <- p4 + geom_bar(aes(y=(..count..)/sum(..count..))) + theme_light()
-# gridExtra::grid.arrange(p3, p4, ncol=2, nrow=2)
-
 #******************************************************************************************************
 #Q-2) Est-ce que ce serait un bon échantillion si on conserve seulement les 1000 première observations #
 #******************************************************************************************************
@@ -340,7 +261,6 @@ abline(v=-0.28,col="red")
 #**************************************************************************************************
 #Q-5) Est-ce que le prix moyen du billet pour un train de classe AVE-TGV est le même que REXPRESS #
 #**************************************************************************************************
-
 # select AVE-TGV and REXPRESS train
 df5 <- df[df$type!="AVE", ]
 ave_tgv <- df[df$type=="AVE-TGV", ]
@@ -387,14 +307,12 @@ t.test(ave_tgv$prix, data=ave_tgv, alternative='two.sided', mu=43.25, conf.level
 #*****************************************************************************************************
 #Q-6) Est-ce que le prix d'une direction est plus chère que l'autre pour les trains à grande vitesse #
 #*****************************************************************************************************
-
 df6 <- df[df$type=="AVE" | df$type=="AVE-TGV", ]
 entrants <- df6[df6$dest==1, ] # madrid->barcelone
 sortants <- df6[df6$dest==0, ] # barcelone->madrid
-
 #***************************
 #  Normality verification  #
-#***************************
+#***************************  
 par(mfrow=c(3,2), pch=20, bty='l')
 # histogram plot ticket prices for destination (1) Madrid->Barcelone.
 hist(entrants$prix, freq=FALSE, col="lightblue",
@@ -422,16 +340,6 @@ boxplot(df6$prix ~ df6$dest,
         ylab="destination",
         main="Destinations prices",
         frame=FALSE)
-
-shapiro.test(entrants$prix)
-# Shapiro-Wilk normality test
-# data:  entrants$prix
-# W = 0.92469, p-value < 2.2e-16
-shapiro.test(sortants$prix)
-# Shapiro-Wilk normality test
-# data:  sortants$prix
-# W = 0.92412, p-value < 2.2e-16
-
 #**********************************
 #  homoscedasticity verification  #
 #**********************************
@@ -445,7 +353,6 @@ var.test(entrants$prix, sortants$prix, alternative="two.sided")
 # sample estimates:
 #         ratio of variances 
 # 1.112307 
-
 # H0: var(entrants) == var(sortants)
 # Ha: var(entrants) <> var(sortants)
 # + var(entrants) est la variance de la destination madrid->barcelone (1)
@@ -453,14 +360,11 @@ var.test(entrants$prix, sortants$prix, alternative="two.sided")
 # La valeur-p du test bilatéral de test-F pour les deux échantillons est 0.0002293.
 # On rejette l'hypothèse nulle, donc la variance de la destination madrid->barcelone
 # est différente que la variance de la destination barcelone->madrid à niveau de 5%.
-
 # H0: µ0 == µ1 (hypthèse null)
 # Ha: µ0 <> µ1 (hypthèse alternative)
 # + ou µ0 est le prix moyen du billet pour un train de grand vitesse allant 
 #   de barcelone à madrid et µ1 est le prix moyen du billet pour un train de 
 #   grand vitesse allant de madrid à barcelone.
-
-# fp.test(entrants$prix, sortants$prix, delta = 0, alternative = "two.sided")
 t.test(prix ~ dest, data=df6, var.equal=F, alternative='two.sided')
 # 	Welch Two Sample t-test
 # data:  prix by dest
@@ -470,44 +374,24 @@ t.test(prix ~ dest, data=df6, var.equal=F, alternative='two.sided')
 #     -1.756087 -0.139458
 # sample estimates:
 #     mean in group 0 mean in group 1 
-#       87.38419        88.33197 
-
+#       87.38419        88.33197
 # La valeur-p du test bilatéral de test Welch pour deux échantillons est 0.02156.
 # On rejette l'hypothèse nulle, donc le prix moyen d'une direction est plus chère
 # que l'autre à niveau de 5% pour le trajet Madrid-Barcelone et celui de Barcelone-Madrid.
-
-wilcox.test(prix ~ dest, data=df6)
-# Wilcoxon rank sum test with continuity correction
+fp.test(prix ~ dest, data=df6, alternative='two.sided')
+# 	Fligner-Policello test
 # data:  prix by dest
-# W = 11184249, p-value = 0.01208
-# alternative hypothesis: true location shift is not equal to 0
+# U* = 2.5177, p-value = 0.01181
+# alternative hypothesis: true difference in location is not equal to 0
 
 #********************************************************************************************************
 #Q-7) Est-ce que le prix la fin de semaine est plus chère que les jours semaine pour les trains AVE-TGV #
 #********************************************************************************************************
 
 df7 <- df[df$type=="AVE-TGV", ]
-# df$is_weekend <- with(df, ifelse(jour %in% c(1, 7), 1, 0))
 weekend <- df7[df7$is_weekend==1, ]
 weekday <- df7[df7$is_weekend==0, ]
-# df7$is_weekend <- with(df7, ifelse(jour %in% c(1, 7), 1, 0))
 head(df7, n=5)
-#       prix    type     classe tarif dest duree jour is_weekend
-# 5    68.95 AVE-TGV Preferente Promo    0   175    4          0
-# 90   98.00 AVE-TGV Preferente Promo    0   175    1          0
-# 100  98.00 AVE-TGV Preferente Promo    0   175    7          1
-# 101 112.55 AVE-TGV Preferente Promo    0   175    1          0
-# 109  98.00 AVE-TGV Preferente Promo    0   175    7          1
-
-# x <- rnorm(100, mean = 5, sd = 3)
-# y <- runif(100, min = 2, max = 4)
-# par(mfrow=c(2,2), pch=20, bty='l')
-# hist(x)
-# qqnorm(x, pch=1)
-# hist(y)
-# qqnorm(y, pch=1)
-# shapiro.test(x)
-# shapiro.test(y)
 #***************************
 #  Normality verification  #
 #***************************
@@ -538,74 +422,71 @@ boxplot(df7$prix ~ df7$is_weekend,
         ylab="is weekend",
         main="Weekday-weekend prices",
         frame=FALSE)
-
+#**********************************
+#  homoscedasticity verification  #
+#**********************************
+var.test(weekend$prix, weekday$prix, alternative="two.sided")
+# 	F test to compare two variances
+# data:  weekend$prix and weekday$prix
+# F = 0.59801, num df = 114, denom df = 313, p-value = 0.001603
+# alternative hypothesis: true ratio of variances is not equal to 1
+# 95 percent confidence interval:
+#   0.4459097 0.8197092
+# sample estimates:
+#   ratio of variances 
+# 0.5980118 
 # H0: µ0 == µ1 ~ µ0 - µ1 = 0 (hypthèse null)
 # Ha: µ0 > µ1 ~  µ0 - µ1 > 0 (hypthèse alternative)
 # + ou µ1 est le prix moyen du billet pour les trains AVE-TGV en jours de la semaine
 #   et µ0 est le prix moyen du billet pour les trains AVE-TGV en fin de semaine. 
-wilcox.test(prix ~ is_weekend, data=df7, alternative="greater")
-# Wilcoxon rank sum test with continuity correction
+fp.test(prix ~ is_weekend, data=df7, alternative="greater")
+# 	Fligner-Policello test
 # data:  prix by is_weekend
-# W = 14922, p-value = 0.9997
-# alternative hypothesis: true location shift is greater than 0
+# U* = 3.2382, p-value = 0.0006024
+# alternative hypothesis: true difference in location is greater than 0
 
-# La valeur-p du test unilatéral de Wilcoxon pour deux échantillons est 0.9997
-# On ne rejette pas l'hypothèse nulle, donc le prix moyen du billet pour les trains AVE-TGV
-# en fin de semaine n'est plus chère que les jours de la semiane à niveau de 5%.
+# La valeur-p du test unilatéral de Fligner Policello pour deux échantillons est 0.0006024
+# On rejette l'hypothèse nulle, donc le prix moyen du billet pour les trains AVE-TGV
+# en fin de semaine est plus chère que les jours de la semiane à niveau de 5%.
 
 #********************************************************************************************************
 #Q-8) Expliquer le prix des billets 'Promo' pour les trains à grande vitesse en fonction de destination, 
 #     classe, duree et une variable additionelle indiquant si le jour est une fin de semaine ou pas.
 #********************************************************************************************************
-
 df8 <- df[(df$type=="AVE" | df$type=="AVE-TGV") & (df$tarif=="Promo"), ]
-df8$is_weekend <- with(df8, ifelse(jour %in% c(6, 7), 1, 0))
 head(df8, n=5)
-#     prix    type     classe tarif dest duree jour weekend
-# 1 143.40     AVE Preferente Promo    0   190    6       1
-# 3  86.80     AVE Preferente Promo    0   165    7       1
-# 4  86.80     AVE Preferente Promo    0   190    7       1
-# 5  68.95 AVE-TGV Preferente Promo    0   175    4       0
-# 6  53.20     AVE Preferente Promo    0   190    7       1
-
-# (8-a)
-# prix = β0 + β1.dest + β2.classe + β3.duree + β4.weekend + E
-
-# (8-b)
-df8$classe <- factor(df8$classe)
+# a)
+# prix = β0 + β1.dest + β2.classe + β3.duree + β4.is_weekend + E
+# b)
 mod <- lm(prix ~ dest + classe + duree + is_weekend, data=df8)
 summary(mod)
 # Residuals:
-#   Min      1Q    Median      3Q     Max 
-# -53.473  -7.450   1.841   9.225  68.610 
+#     Min      1Q  Median      3Q     Max 
+# -53.231  -7.782   1.862   9.050  68.991 
 # Coefficients:
-#                   Estimate Std. Error   t value    Pr(>|t|)    
-# (Intercept)       135.341077   1.708457  79.218   <2e-16 ***
-#   dest              0.433242   0.298252   1.453    0.146    
-# classeTurista     -17.764789   0.532803 -33.342   <2e-16 ***
-# classeTuristaPlus  -6.927631   0.587443 -11.793   <2e-16 ***
-# classeTuristaSolo  -9.069268   9.471460  -0.958    0.338    
-# duree              -0.231672   0.009464 -24.480   <2e-16 ***
-# weekend            -0.408880   0.347892  -1.175    0.240    
-# ---
-#   Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-
+#                      Estimate Std. Error t value Pr(>|t|)    
+#  (Intercept)       135.972720   1.708307  79.595  < 2e-16 ***
+#  dest                0.455052   0.297959   1.527  0.12674    
+#  classeTurista     -17.589537   0.535832 -32.827  < 2e-16 ***
+#  classeTuristaPlus  -6.747759   0.589976 -11.437  < 2e-16 ***
+#  classeTuristaSolo  -8.592175   9.467670  -0.908  0.36415    
+#  duree              -0.238421   0.009508 -25.075  < 2e-16 ***
+#  is_weekend          1.080843   0.365161   2.960  0.00309 ** 
+#  ---
+#  Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ‘ ’ 1
 # Residual standard error: 13.37 on 8052 degrees of freedom
-# Multiple R-squared:  0.206,	Adjusted R-squared:  0.2054 
-# F-statistic: 348.1 on 6 and 8052 DF,  p-value: < 2.2e-16
-
-# prix_^ = 135.34 + 0.44.dest_^ + (-17.76 - 6.93 - 9.07).classe_^ - 0.23.duree_^ - 0.41.weekend_^
-
-# dest (binaire): En fixant toutes les autres co-variables, toutes choses étant égales, 
-#                 le prix moyen du trajet Madrid->Barcelone augmente de 0.44 par rapport 
-#                 au trajet Barcelone->Madrid.
-# duree (continue): En fixant toutes les autres co-variables, toutes choses étant égales, 
-#                   une augmentation de la duree d'une minute implique une dimunition de 0.41 minutes
-#                   du prix en moyenne.
-# weekend (binaire): En fixant toutes les autres co-variables, toutes choses étant égales,
-#                    le prix moyen en fin de semaine diminue de 0.41 par rappot au jour semaine.
-#
-# # (8-c)
+# Multiple R-squared:  0.2067,	Adjusted R-squared:  0.2061 
+# F-statistic: 349.7 on 6 and 8052 DF,  p-value: < 2.2e-16
+# prix_^ = 135.97 + 0.45.dest_^ - 17.6.classeTurista_^ - 6.75.classeTuristaPlus_^ - 8.6.classeTuristaSolo_^ - 0.24.duree_^ + 1.1.weekend_^
+# dest: En fixant toutes les autres co-variables, toutes choses étant égales, 
+#       le prix moyen du trajet Madrid->Barcelone augmente de 0.45 par rapport 
+#       au trajet Barcelone->Madrid.
+# duree: En fixant toutes les autres co-variables, toutes choses étant égales, 
+#        une augmentation de la duree d'une minute implique une dimunition de 0.24
+#        minutes du prix en moyenne.
+# is_weekend: En fixant toutes les autres co-variables, toutes choses étant égales,
+#             le prix moyen en fin de semaine diminue de 1.1 par rappot au jour semaine.
+# c)
 #***************
 # Destination  #
 #***************
@@ -614,18 +495,17 @@ summary(mod)
 mod1 <- lm(prix ~ dest, data=df8)
 summary(mod1)
 # Residuals:
-#  Min      1Q     Median      3Q     Max 
+#     Min      1Q  Median      3Q     Max 
 # -50.260  -7.160   2.540   8.385  87.085 
 # Coefficients:
-#           Estimate Std. Error    t value   Pr(>|t|)    
-# (Intercept)  82.1145     0.2373  345.967   <2e-16 ***
-#   dest        0.4454     0.3342    1.333    0.183    
+#    v          Estimate Std. Error t value Pr(>|t|)    
+#  (Intercept)   82.1145     0.2373 345.967   <2e-16 ***
+#   dest          0.4454     0.3342   1.333    0.183    
 # ---
-#   Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+#   Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ‘ ’ 1
 # Residual standard error: 15 on 8057 degrees of freedom
 # Multiple R-squared:  0.0002204,	Adjusted R-squared:  9.628e-05 
 # F-statistic: 1.776 on 1 and 8057 DF,  p-value: 0.1827
-
 # On ne rejete pas H0, donc il n'y a pas d'effet significatif de la destination sur le prix.
 #***********
 #  classe  #
@@ -644,11 +524,10 @@ summary(mod2)
 #   classeTuristaPlus  -7.1706     0.6095  -11.764   <2e-16 ***
 #   classeTuristaSolo  -7.4616     9.8297  -0.759     0.448    
 # ---
-#   Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+#   Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ‘ ’ 1
 # Residual standard error: 13.88 on 8055 degrees of freedom
 # Multiple R-squared:  0.1441,	Adjusted R-squared:  0.1438 
 # F-statistic: 452.2 on 3 and 8055 DF,  p-value: < 2.2e-16
-!!!!!!!!!!!!
 #***********
 #   Duree  #
 #***********
@@ -664,33 +543,30 @@ summary(mod3)
 # (Intercept) 113.03652    1.74146   64.91   <2e-16 ***
 #   duree     -0.18024     0.01018  -17.71   <2e-16 ***
 #  ---
-#  Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-
+#  Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ‘ ’ 1
 # Residual standard error: 14.72 on 8057 degrees of freedom
 # Multiple R-squared:  0.03745,	Adjusted R-squared:  0.03733 
 # F-statistic: 313.5 on 1 and 8057 DF,  p-value: < 2.2e-16
-
 # On rejete H0, donc il y a un effet significatif de la duree sur le prix.
 #***********
 # weekend  #
 #***********
 # H0: β4=0
 # H1: β4#0
-mod4 <- lm(prix ~ weekend, data=df8)
+mod4 <- lm(prix ~ is_weekend, data=df8)
 summary(mod4)
 # Residuals:
-#     Min      1Q    Median      3Q     Max 
-#   -50.435  -7.335   2.365   7.765  86.465 
+#     Min      1Q  Median      3Q     Max 
+# -50.709  -7.609   2.091   8.356  87.056 
 # Coefficients:
-#            Estimate Std. Error   t value  Pr(>|t|)    
-# (Intercept)  82.7349     0.1929  428.938  < 2e-16 ***
-#   weekend    -1.5779     0.3852   -4.097 4.23e-05 ***
-#   ---
-#   Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-# Residual standard error: 14.99 on 8057 degrees of freedom
-# Multiple R-squared:  0.002079,	Adjusted R-squared:  0.001955 
-# F-statistic: 16.78 on 1 and 8057 DF,  p-value: 4.233e-05
-
+#               Estimate Std. Error t value Pr(>|t|)    
+#  (Intercept)  82.1444     0.1898 432.721   <2e-16 ***
+#  is_weekend    0.8644     0.3999   2.162   0.0307 *  
+#  ---
+#  Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ‘ ’ 1
+# Residual standard error: 15 on 8057 degrees of freedom
+# Multiple R-squared:  0.0005796,	Adjusted R-squared:  0.0004555 
+# F-statistic: 4.672 on 1 and 8057 DF,  p-value: 0.03068
 # On rejete H0, donc il y a un effet significatif de la fin de semaine sur le prix.
 #*************
 # Le modele  #
@@ -698,23 +574,23 @@ summary(mod4)
 mod <- lm(prix ~ dest + classe + duree + is_weekend, data=df8)
 summary(mod)
 # Residuals:
-#   Min      1Q    Median      3Q     Max 
-# -53.473  -7.450   1.841   9.225  68.610 
+# Min      1Q  Median      3Q     Max 
+# -53.231  -7.782   1.862   9.050  68.991 
 # Coefficients:
-#                   Estimate Std.  Error    t value   Pr(>|t|)    
-#   (Intercept)       135.341077   1.708457  79.218   <2e-16 ***
-#   dest                0.433242   0.298252   1.453    0.146    
-#   classeTurista     -17.764789   0.532803 -33.342   <2e-16 ***
-#   classeTuristaPlus  -6.927631   0.587443 -11.793   <2e-16 ***
-#   classeTuristaSolo  -9.069268   9.471460  -0.958    0.338    
-#   duree              -0.231672   0.009464 -24.480   <2e-16 ***
-#   weekend            -0.408880   0.347892  -1.175    0.240    
-# ---
-#   Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+#                       Estimate Std. Error t value Pr(>|t|)    
+#   (Intercept)       135.972720   1.708307  79.595  < 2e-16 ***
+#   dest                0.455052   0.297959   1.527  0.12674    
+#   classeTurista     -17.589537   0.535832 -32.827  < 2e-16 ***
+#   classeTuristaPlus  -6.747759   0.589976 -11.437  < 2e-16 ***
+#   classeTuristaSolo  -8.592175   9.467670  -0.908  0.36415    
+# duree              -0.238421   0.009508 -25.075  < 2e-16 ***
+#   is_weekend          1.080843   0.365161   2.960  0.00309 ** 
+#  ---
+#   Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ‘ ’ 1
 # Residual standard error: 13.37 on 8052 degrees of freedom
-# Multiple R-squared:  0.206,	Adjusted R-squared:  0.2054 
-# F-statistic: 348.1 on 6 and 8052 DF,  p-value: < 2.2e-16
-
+# Multiple R-squared:  0.2067,	Adjusted R-squared:  0.2061 
+# F-statistic: 349.7 on 6 and 8052 DF,  p-value: < 2.2e-16
+# d)
 par(mfrow = c(2,2)) 
 plot(mod)
 # 1) Risiduals vs Fitted (Linéarité - indépendnce): 
@@ -727,3 +603,5 @@ plot(mod)
 # 4) Residuals vs Leverage: 
 # Notre graphique ne montre aucun cas influent, car aucuns des points se trouve 
 # en dehors de la distance de Cook.
+
+
