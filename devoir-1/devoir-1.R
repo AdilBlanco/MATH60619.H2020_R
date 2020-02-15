@@ -486,6 +486,7 @@ summary(mod)
 #        minutes du prix en moyenne.
 # is_weekend: En fixant toutes les autres co-variables, toutes choses étant égales,
 #             le prix moyen en fin de semaine diminue de 1.1 par rappot au jour semaine.
+
 # c)
 #***************
 # Destination  #
@@ -506,6 +507,7 @@ summary(mod1)
 # Residual standard error: 15 on 8057 degrees of freedom
 # Multiple R-squared:  0.0002204,	Adjusted R-squared:  9.628e-05 
 # F-statistic: 1.776 on 1 and 8057 DF,  p-value: 0.1827
+
 # On ne rejete pas H0, donc il n'y a pas d'effet significatif de la destination sur le prix.
 #***********
 #  classe  #
@@ -513,21 +515,16 @@ summary(mod1)
 # H0: β2=0
 # H1: β2#0
 mod2 <- lm(prix ~ classe, data=df8)
-summary(mod2)
-# Residuals:
-#    Min      1Q   Median      3Q     Max 
-# -49.391  -8.041   2.309   6.479  73.838 
-# Coefficients:
-#                  Estimate Std.   Error   t value   Pr(>|t|)    
-#   (Intercept)        95.3616     0.5184  183.944   <2e-16 ***
-#   classeTurista     -16.7407     0.5514  -30.361   <2e-16 ***
-#   classeTuristaPlus  -7.1706     0.6095  -11.764   <2e-16 ***
-#   classeTuristaSolo  -7.4616     9.8297  -0.759     0.448    
+anova(mod2)
+# Analysis of Variance Table
+# Response: prix
+#                Df  Sum Sq Mean Sq F value    Pr(>F)    
+#    classe       3  261416   87139  452.18 < 2.2e-16 ***
+#    Residuals 8055 1552252     193                      
 # ---
-#   Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ‘ ’ 1
-# Residual standard error: 13.88 on 8055 degrees of freedom
-# Multiple R-squared:  0.1441,	Adjusted R-squared:  0.1438 
-# F-statistic: 452.2 on 3 and 8055 DF,  p-value: < 2.2e-16
+#     Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+# On rejete H0, donc il y a un effet significatif de la classe sur le prix.
 #***********
 #   Duree  #
 #***********
@@ -547,6 +544,7 @@ summary(mod3)
 # Residual standard error: 14.72 on 8057 degrees of freedom
 # Multiple R-squared:  0.03745,	Adjusted R-squared:  0.03733 
 # F-statistic: 313.5 on 1 and 8057 DF,  p-value: < 2.2e-16
+
 # On rejete H0, donc il y a un effet significatif de la duree sur le prix.
 #***********
 # weekend  #
@@ -567,29 +565,24 @@ summary(mod4)
 # Residual standard error: 15 on 8057 degrees of freedom
 # Multiple R-squared:  0.0005796,	Adjusted R-squared:  0.0004555 
 # F-statistic: 4.672 on 1 and 8057 DF,  p-value: 0.03068
+
 # On rejete H0, donc il y a un effet significatif de la fin de semaine sur le prix.
-#*************
-# Le modele  #
-#*************
+#*******************
+# Le modele global #
+#*******************
 mod <- lm(prix ~ dest + classe + duree + is_weekend, data=df8)
-summary(mod)
-# Residuals:
-# Min      1Q  Median      3Q     Max 
-# -53.231  -7.782   1.862   9.050  68.991 
-# Coefficients:
-#                       Estimate Std. Error t value Pr(>|t|)    
-#   (Intercept)       135.972720   1.708307  79.595  < 2e-16 ***
-#   dest                0.455052   0.297959   1.527  0.12674    
-#   classeTurista     -17.589537   0.535832 -32.827  < 2e-16 ***
-#   classeTuristaPlus  -6.747759   0.589976 -11.437  < 2e-16 ***
-#   classeTuristaSolo  -8.592175   9.467670  -0.908  0.36415    
-# duree              -0.238421   0.009508 -25.075  < 2e-16 ***
-#   is_weekend          1.080843   0.365161   2.960  0.00309 ** 
-#  ---
-#   Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ‘ ’ 1
-# Residual standard error: 13.37 on 8052 degrees of freedom
-# Multiple R-squared:  0.2067,	Adjusted R-squared:  0.2061 
-# F-statistic: 349.7 on 6 and 8052 DF,  p-value: < 2.2e-16
+anova(mod)
+# Analysis of Variance Table
+# Response: prix
+#               Df  Sum Sq Mean Sq  F value    Pr(>F)    
+#  dest          1     400     400   2.2367  0.134809    
+#  classe        3  261667   87222 488.1248 < 2.2e-16 ***
+#  duree         1  111239  111239 622.5282 < 2.2e-16 ***
+#  is_weekend    1    1565    1565   8.7611  0.003086 ** 
+#  Residuals  8052 1438798     179                       
+# ---
+#    Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
 # d)
 par(mfrow = c(2,2)) 
 plot(mod)
