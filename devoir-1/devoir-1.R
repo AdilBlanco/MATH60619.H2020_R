@@ -477,15 +477,23 @@ summary(mod)
 # Residual standard error: 13.37 on 8052 degrees of freedom
 # Multiple R-squared:  0.2067,	Adjusted R-squared:  0.2061 
 # F-statistic: 349.7 on 6 and 8052 DF,  p-value: < 2.2e-16
+
 # prix_^ = 135.97 + 0.45.dest_^ - 17.6.classeTurista_^ - 6.75.classeTuristaPlus_^ - 8.6.classeTuristaSolo_^ - 0.24.duree_^ + 1.1.weekend_^
-# dest: En fixant toutes les autres co-variables, toutes choses étant égales, 
+
+# + dest: En fixant toutes les autres co-variables, toutes choses étant égales, 
 #       le prix moyen du trajet Madrid->Barcelone augmente de 0.45 par rapport 
 #       au trajet Barcelone->Madrid.
-# duree: En fixant toutes les autres co-variables, toutes choses étant égales, 
-#        une augmentation de la duree d'une minute implique une dimunition de 0.24
-#        minutes du prix en moyenne.
-# is_weekend: En fixant toutes les autres co-variables, toutes choses étant égales,
-#             le prix moyen en fin de semaine diminue de 1.1 par rappot au jour semaine.
+# + classeTurista: En fixant toutes les autres co-variables, toutes choses étant égales,
+#           le prix moyen de la classe 'Turista' diminue de 17.6 par rapport à la classe 'Preferente'.
+# + classeTuristaPlus: En fixant toutes les autres co-variables, toutes choses étant égales,
+#           le prix moyen de la classe 'TuristaPlus' diminue de 6.75 par rapport à la classe 'Preferente'.
+# + classeTuristaSolo: En fixant toutes les autres co-variables, toutes choses étant égales,
+#           le prix moyen de la classe 'TuristaSolo' diminue de 8.6 par rapport à la classe 'Preferente'.
+# + duree: En fixant toutes les autres co-variables, toutes choses étant égales, 
+#       une augmentation de la duree d'une minute implique une dimunition de 0.24
+#       minutes du prix en moyenne.
+# + is_weekend: En fixant toutes les autres co-variables, toutes choses étant égales,
+#           le prix moyen en fin de semaine augmente de 1.1 par rappot au jour semaine.
 
 # c)
 #***************
