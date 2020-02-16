@@ -6,7 +6,7 @@ library(dplyr)
 #     + de déterminer les caractéristiques distinctives des types de train.                #
 #     + d'établir s'il y a des diffèrences entre les différents tarifs                     #
 #*******************************************************************************************
-# fin de semaine 1 et 7
+
 df <- read.csv("./MATH60619.H2020_R/devoir-1/renfe_fr.csv", header=TRUE)
 df$is_weekend <- with(df, ifelse(jour %in% c(1, 7), 1, 0))
 head(df, n=4)
