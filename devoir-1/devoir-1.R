@@ -230,6 +230,22 @@ summary(df1k)
 # Non ça ne serait pas un bon échantillon vu l'abscence des classes "TuristaPlus" et "TuristaSolo" 
 # ainsi l'échantillon contient que les trajets Barcelone vers Madrid (0).
 
+#******************************************************************************************************
+#Q-3)  #
+#******************************************************************************************************
+df3 <- df[df$type!="REXPRESS", ]
+
+par(mfrow=c(1,2), pch=20, bty='l')
+hist(df3$duree/60, freq=FALSE, col="lightblue",
+     xlab="duration (hour)", main="AVE-TGV/AVE duration Histogram", ylab="density")
+lines(density(df3$duree/60), lty=2,col="black", lwd=1)
+lines(curve(dnorm(x, mean= mean(df3$duree/60), 
+                  sd=sd(df3$duree/60)), from=20, to=200, add=TRUE), col="red", lwd=2)
+abline(v=2.833,col="red")
+
+qqnorm(df3$duree/60, pch=1, main="AVE-TGV/AVE duration Q-Q plot", frame=FALSE)
+qqline(df3$duree/60, col="steelblue", lwd=2)
+
 #*************************************************************************************************************
 #Q-4) Comparaison les tarifs moyennes pour les train à grande vitesse pour les deux déstinations (simulation)#
 #*************************************************************************************************************
