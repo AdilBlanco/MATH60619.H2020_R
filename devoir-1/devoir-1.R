@@ -30,6 +30,11 @@ summary(df)
 # 3rd Qu.:100.4                                                       3rd Qu.:1.0000   3rd Qu.:190.0  
 # Max.   :214.2                                                       Max.   :1.0000   Max.   :562.0 
 
+expr_df <- df[df$type=="REXPRESS", ]
+table(expr_df$prix, expr_df$type)
+#        AVE AVE-TGV REXPRESS
+# 43.25   0       0      397
+
 type_percent <- df %>% group_by(type) %>% summarise(n = n()) %>% mutate(freq = n / sum(n))
 # type         n    freq
 # <fct>      <int>  <dbl>
