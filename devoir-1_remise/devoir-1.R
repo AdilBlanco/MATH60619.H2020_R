@@ -1,4 +1,3 @@
-library(RVAideMemoire)
 library(dplyr)
 #*******************************************************************************************
 #Q-1) Analyse exploratoire des données renf afin:                                          #                     
@@ -6,8 +5,7 @@ library(dplyr)
 #     + de déterminer les caractéristiques distinctives des types de train.                #
 #     + d'établir s'il y a des diffèrences entre les différents tarifs                     #
 #*******************************************************************************************
-
-df <- read.csv("./MATH60619.H2020_R/devoir-1/renfe_fr.csv", header=TRUE)
+df <- read.csv("./renfe_fr.csv", header=TRUE)
 df$is_weekend <- with(df, ifelse(jour %in% c(1, 7), 1, 0))
 head(df, n=4)
 #    prix type     classe    tarif dest duree jour is_weekend
@@ -15,11 +13,6 @@ head(df, n=4)
 # 2 181.5  AVE Preferente Flexible    0   190    2          0
 # 3  86.8  AVE Preferente    Promo    0   165    7          1
 # 4  86.8  AVE Preferente    Promo    0   190    7          1
-
-dim(df)
-# [1] 10000     8
-colnames(df)
-# [1] "prix"   "type"   "classe" "tarif"  "dest"   "duree"  "jour"  "is_weekend"
 
 summary(df)
 #      prix             type              classe           tarif           dest            duree      
@@ -37,26 +30,22 @@ table(expr_df$prix, expr_df$type)
 
 type_percent <- df %>% group_by(type) %>% summarise(n = n()) %>% mutate(freq = n / sum(n))
 # type         n    freq
-# <fct>      <int>  <dbl>
 # 1 AVE       9174  0.917 
 # 2 AVE-TGV    429  0.0429
 # 3 REXPRESS   397  0.0397
 classe_percent <- df %>% group_by(classe) %>% summarise(n = n()) %>% mutate(freq = n / sum(n))
 # classe          n    freq
-# <fct>       <int>    <dbl>
 # 1 Preferente    809  0.0809
 # 2 Turista      7197  0.720 
 # 3 TuristaPlus  1916  0.192 
 # 4 TuristaSolo    78  0.0078
 tarif_percent <- df %>% group_by(tarif) %>% summarise(n = n()) %>% mutate(freq = n / sum(n))
 # tarif         n    freq
-# <fct>       <int>  <dbl>
 # 1 AdultoIda   397  0.0397
 # 2 Flexible   1544  0.154 
 # 3 Promo      8059  0.806 
 jour_percent <- df %>% group_by(is_weekend) %>% summarise(n = n()) %>% mutate(freq = n / sum(n))
 #  is_weekend   n  freq
-#     <dbl>  <int> <dbl>
 # 1      0   7479  0.748
 # 2      1   2521  0.252
 par(mfrow=c(2, 2))
@@ -107,8 +96,8 @@ legend("topright",
 par(mfrow=c(3, 2))
 boxplot(prix ~ type, 
         data=df,
-        boxwex=.3,      # determines the width of the box  
-        staplewex=.6,   # determines the width of the whisker
+        boxwex=.3,
+        staplewex=.6,
         col="lightblue", 
         xlab="type", 
         ylab="ticket price (Euro)",
@@ -116,8 +105,8 @@ boxplot(prix ~ type,
         frame=FALSE)
 boxplot(prix ~ classe, 
         data=df,
-        boxwex=.3,      # determines the width of the box  
-        staplewex=.6,   # determines the width of the whisker
+        boxwex=.3,
+        staplewex=.6,
         col="lightblue", 
         xlab="class", 
         ylab="ticket price (Euro)",
@@ -125,8 +114,8 @@ boxplot(prix ~ classe,
         frame=FALSE)
 boxplot(prix ~ tarif, 
         data=df,
-        boxwex=.3,      # determines the width of the box  
-        staplewex=.6,   # determines the width of the whisker
+        boxwex=.3,
+        staplewex=.6,
         col="lightblue", 
         xlab="tarif", 
         ylab="ticket price (Euro)",
@@ -134,8 +123,8 @@ boxplot(prix ~ tarif,
         frame=FALSE)
 boxplot(prix ~ dest, 
         data=df,
-        boxwex=.3,      # determines the width of the box  
-        staplewex=.6,   # determines the width of the whisker
+        boxwex=.3,
+        staplewex=.6,
         col="lightblue", 
         xlab="destination", 
         ylab="ticket price (Euro)",
@@ -143,8 +132,8 @@ boxplot(prix ~ dest,
         frame=FALSE)
 boxplot(prix ~ jour,
         data=df,
-        boxwex=.3,      # determines the width of the box  
-        staplewex=.6,   # determines the width of the whisker
+        boxwex=.3,
+        staplewex=.6,
         col="lightblue", 
         xlab="day", 
         ylab="ticket price (Euro)",
@@ -152,8 +141,8 @@ boxplot(prix ~ jour,
         frame=FALSE)
 boxplot(prix ~ is_weekend,
         data=df,
-        boxwex=.3,      # determines the width of the box  
-        staplewex=.6,   # determines the width of the whisker
+        boxwex=.3,
+        staplewex=.6,
         col="lightblue", 
         xlab="is_wekend", 
         ylab="ticket price (Euro)",
@@ -165,8 +154,8 @@ boxplot(prix ~ is_weekend,
 par(mfrow=c(3, 2))
 boxplot(duree ~ type, 
         data=df,
-        boxwex=.4,      # determines the width of the box  
-        staplewex=.6,   # determines the width of the whisker
+        boxwex=.4,
+        staplewex=.6,
         col="lightblue", 
         xlab="type", 
         ylab="travel time (minute)",
@@ -174,8 +163,8 @@ boxplot(duree ~ type,
         frame=FALSE)
 boxplot(duree ~ classe,
         data=df,
-        boxwex=.4,      # determines the width of the box  
-        staplewex=.6,   # determines the width of the whisker
+        boxwex=.4,
+        staplewex=.6,
         col="lightblue", 
         xlab="class", 
         ylab="travel time (minute)",
@@ -183,8 +172,8 @@ boxplot(duree ~ classe,
         frame=FALSE)
 boxplot(duree ~ tarif,
         data=df,
-        boxwex=.4,      # determines the width of the box  
-        staplewex=.6,   # determines the width of the whisker
+        boxwex=.4,
+        staplewex=.6,
         col="lightblue", 
         xlab="tarif", 
         ylab="travel time (minute)",
@@ -192,8 +181,8 @@ boxplot(duree ~ tarif,
         frame=FALSE)
 boxplot(duree ~ dest,
         data=df,
-        boxwex=.4,      # determines the width of the box  
-        staplewex=.6,   # determines the width of the whisker
+        boxwex=.4,
+        staplewex=.6,
         col="lightblue", 
         xlab="destination", 
         ylab="travel time (minute)",
@@ -201,8 +190,8 @@ boxplot(duree ~ dest,
         frame=FALSE)
 boxplot(duree ~ jour,
         data=df,
-        boxwex=.4,      # determines the width of the box  
-        staplewex=.6,   # determines the width of the whisker
+        boxwex=.4,
+        staplewex=.6,
         col="lightblue", 
         xlab="day", 
         ylab="travel time (minute)",
@@ -210,8 +199,8 @@ boxplot(duree ~ jour,
         frame=FALSE)
 boxplot(prix ~ is_weekend,
         data=df,
-        boxwex=.4,      # determines the width of the box  
-        staplewex=.6,   # determines the width of the whisker
+        boxwex=.4,
+        staplewex=.6,
         col="lightblue", 
         xlab="is_wekend", 
         ylab="travel time (minute)",
@@ -221,7 +210,6 @@ boxplot(prix ~ is_weekend,
 #******************************************************************************************************
 #Q-2) Est-ce que ce serait un bon échantillion si on conserve seulement les 1000 première observations #
 #******************************************************************************************************
-
 df1k <- df[1:1000,]
 summary(df1k)
 #       prix              type             classe          tarif          dest       duree      
@@ -232,14 +220,14 @@ summary(df1k)
 # 3rd Qu.:100.40                                                    3rd Qu.:0   3rd Qu.:190.0  
 # Max.   :214.20                                                    Max.   :0   Max.   :544.0  
 
-# Non ça ne serait pas un bon échantillon vu l'abscence des classes "TuristaPlus" et "TuristaSolo" 
-# ainsi l'échantillon contient que les trajets Barcelone vers Madrid (0).
-
 #******************************************************************************************************
-#Q-3)  #
+#Q-3) L'histogramme du temps de parcours pour expliquer les valeurs inattendue et le diagramme        # 
+#     Quantile-Quantile pour expliquer la robustesse du test-t.                                       #
 #******************************************************************************************************
 df3 <- df[df$type!="REXPRESS", ]
 
+# d)
+# histogram plot duration by hour for AVE-TGV and AVE trains.
 par(mfrow=c(1,2), pch=20, bty='l')
 hist(df3$duree/60, freq=FALSE, col="lightblue",
      xlab="duration (hour)", main="AVE-TGV/AVE duration Histogram", ylab="density")
@@ -248,14 +236,15 @@ lines(curve(dnorm(x, mean= mean(df3$duree/60),
                   sd=sd(df3$duree/60)), from=20, to=200, add=TRUE), col="red", lwd=2)
 abline(v=2.833,col="red")
 
+# e)
+# Normal Quantile-Q plot duration by hour for AVE-TGV and AVE trains.
 qqnorm(df3$duree/60, pch=1, main="AVE-TGV/AVE duration Q-Q plot", frame=FALSE)
 qqline(df3$duree/60, col="steelblue", lwd=2)
 
 #*************************************************************************************************************
 #Q-4) Comparaison les tarifs moyennes pour les train à grande vitesse pour les deux déstinations (simulation)#
 #*************************************************************************************************************
-
-df4 <- read.csv("./MATH60619.H2020_R/devoir-1/renfe_simu_fr.csv", header=TRUE)
+df4 <- read.csv("./renfe_simu_fr.csv", header=TRUE)
 head(df4, n=4)
 #     difmoy     statW        icbi       icbs       valp
 # 1 -0.4818434 -1.174404 -1.28609052 0.32240363 0.24026152
@@ -266,14 +255,16 @@ head(df4, n=4)
 # a) 
 (nrow(df4[(df4$icbi < -0.28) & (df4$icbs > -0.28), ]) / nrow(df4)) * 100
 # [1] 94.7
+
 # b)
 par(mfrow=c(1,1), pch=20, bty='l')
 hist(df4$difmoy, 
-     col="lightblue",
+     col="cornflowerblue",
      xlab="means differences",
      ylab="frequency" ,
      main="Means differences Histogram")
 abline(v=-0.28,col="red")
+
 # c)
 (nrow(df4[df4$valp < 0.05, ]) / nrow(df4)) * 100
 # [1] 10.5
@@ -281,7 +272,6 @@ abline(v=-0.28,col="red")
 #**************************************************************************************************
 #Q-5) Est-ce que le prix moyen du billet pour un train de classe AVE-TGV est le même que REXPRESS #
 #**************************************************************************************************
-# select AVE-TGV and REXPRESS train
 df5 <- df[df$type!="AVE", ]
 ave_tgv <- df[df$type=="AVE-TGV", ]
 
@@ -307,9 +297,6 @@ boxplot(df5$prix ~ df5$type,
 mean(df[df$type=="REXPRESS", ]$prix)
 # [1] 43.25
 
-# H0: µ0 == 43.25 (hypthèse null)
-# Ha: µ0 <> 43.25  (hypthèse alternative)
-# + ou µ0 est le prix moyen du billet pour un train de type AVE-TGV.
 t.test(ave_tgv$prix, data=ave_tgv, alternative='two.sided', mu=43.25, conf.level=0.9)
 # 	One Sample t-test
 # data:  ave_tgv$prix
@@ -321,9 +308,6 @@ t.test(ave_tgv$prix, data=ave_tgv, alternative='two.sided', mu=43.25, conf.level
 #         mean of x 
 # 88.88028 
 
-# La valeur-p du test bilatéral de test-t pour un échantillon simple est 2.2e-16.
-# On rejette l'hypothèse nulle, donc le prix moyen de ticket pour un train AVE-TGV 
-# n'est pas le même que RESXPRESS.
 #*****************************************************************************************************
 #Q-6) Est-ce que le prix d'une direction est plus chère que l'autre pour les trains à grande vitesse #
 #*****************************************************************************************************
@@ -373,18 +357,6 @@ var.test(entrants$prix, sortants$prix, alternative="two.sided")
 # sample estimates:
 #         ratio of variances 
 # 1.112307 
-# H0: var(entrants) == var(sortants)
-# Ha: var(entrants) <> var(sortants)
-# + var(entrants) est la variance de la destination madrid->barcelone (1)
-#   et var(sortants) est la variance de la destination bqrcelone->madrid (0) 
-# La valeur-p du test bilatéral de test-F pour les deux échantillons est 0.0002293.
-# On rejette l'hypothèse nulle, donc la variance de la destination madrid->barcelone
-# est différente que la variance de la destination barcelone->madrid à niveau de 5%.
-# H0: µ0 == µ1 (hypthèse null)
-# Ha: µ0 <> µ1 (hypthèse alternative)
-# + ou µ0 est le prix moyen du billet pour un train de grand vitesse allant 
-#   de barcelone à madrid et µ1 est le prix moyen du billet pour un train de 
-#   grand vitesse allant de madrid à barcelone.
 t.test(prix ~ dest, data=df6, var.equal=F, alternative='two.sided')
 # 	Welch Two Sample t-test
 # data:  prix by dest
@@ -395,9 +367,6 @@ t.test(prix ~ dest, data=df6, var.equal=F, alternative='two.sided')
 # sample estimates:
 #     mean in group 0 mean in group 1 
 #       87.38419        88.33197
-# La valeur-p du test bilatéral de test Welch pour deux échantillons est 0.02156.
-# On rejette l'hypothèse nulle, donc le prix moyen d'une direction est plus chère
-# que l'autre à niveau de 5% pour le trajet Madrid-Barcelone et celui de Barcelone-Madrid.
 fp.test(prix ~ dest, data=df6, alternative='two.sided')
 # 	Fligner-Policello test
 # data:  prix by dest
@@ -407,11 +376,9 @@ fp.test(prix ~ dest, data=df6, alternative='two.sided')
 #********************************************************************************************************
 #Q-7) Est-ce que le prix la fin de semaine est plus chère que les jours semaine pour les trains AVE-TGV #
 #********************************************************************************************************
-
 df7 <- df[df$type=="AVE-TGV", ]
 weekend <- df7[df7$is_weekend==1, ]
 weekday <- df7[df7$is_weekend==0, ]
-head(df7, n=5)
 #***************************
 #  Normality verification  #
 #***************************
@@ -422,7 +389,7 @@ hist(weekday$prix, freq=FALSE, col="lightblue",
 lines(density(weekday$prix), lty=2,col="black", lwd=1)
 lines(curve(dnorm(x, mean= mean(weekday$prix), 
                   sd=sd(weekday$prix)), from=20, to=200, add=TRUE), col="red", lwd=2)
-# # histogram plot weekend ticket prices.
+# histogram plot weekend ticket prices.
 hist(weekend$prix, freq=FALSE, col="lightblue",
      xlab="ticket price (Euro)", main="Weekend Histogram", ylab="density")
 lines(density(weekend$prix), lty=2,col="black", lwd=1)
@@ -455,19 +422,11 @@ var.test(weekend$prix, weekday$prix, alternative="two.sided")
 # sample estimates:
 #   ratio of variances 
 # 0.5980118 
-# H0: µ0 == µ1 ~ µ0 - µ1 = 0 (hypthèse null)
-# Ha: µ0 > µ1 ~  µ0 - µ1 > 0 (hypthèse alternative)
-# + ou µ1 est le prix moyen du billet pour les trains AVE-TGV en jours de la semaine
-#   et µ0 est le prix moyen du billet pour les trains AVE-TGV en fin de semaine. 
 fp.test(prix ~ is_weekend, data=df7, alternative="greater")
 # 	Fligner-Policello test
 # data:  prix by is_weekend
 # U* = 3.2382, p-value = 0.0006024
 # alternative hypothesis: true difference in location is greater than 0
-
-# La valeur-p du test unilatéral de Fligner Policello pour deux échantillons est 0.0006024
-# On rejette l'hypothèse nulle, donc le prix moyen du billet pour les trains AVE-TGV
-# en fin de semaine est plus chère que les jours de la semiane à niveau de 5%.
 
 #********************************************************************************************************
 #Q-8) Expliquer le prix des billets 'Promo' pour les trains à grande vitesse en fonction de destination, 
@@ -475,8 +434,7 @@ fp.test(prix ~ is_weekend, data=df7, alternative="greater")
 #********************************************************************************************************
 df8 <- df[(df$type=="AVE" | df$type=="AVE-TGV") & (df$tarif=="Promo"), ]
 head(df8, n=5)
-# a)
-# prix = β0 + β1.dest + β2.classe + β3.duree + β4.is_weekend + E
+
 # b)
 mod <- lm(prix ~ dest + classe + duree + is_weekend, data=df8)
 summary(mod)
@@ -498,48 +456,7 @@ summary(mod)
 # Multiple R-squared:  0.2067,	Adjusted R-squared:  0.2061 
 # F-statistic: 349.7 on 6 and 8052 DF,  p-value: < 2.2e-16
 
-# prix_^ = 135.97 + 0.45.dest_^ - 17.6.classeTurista_^ - 6.75.classeTuristaPlus_^ - 8.6.classeTuristaSolo_^ - 0.24.duree_^ + 1.1.weekend_^
-
-# + dest: En fixant toutes les autres co-variables, toutes choses étant égales, 
-#       le prix moyen du trajet Madrid->Barcelone augmente de 0.45 par rapport 
-#       au trajet Barcelone->Madrid.
-# + classeTurista: En fixant toutes les autres co-variables, toutes choses étant égales,
-#           le prix moyen de la classe 'Turista' diminue de 17.6 par rapport à la classe 'Preferente'.
-# + classeTuristaPlus: En fixant toutes les autres co-variables, toutes choses étant égales,
-#           le prix moyen de la classe 'TuristaPlus' diminue de 6.75 par rapport à la classe 'Preferente'.
-# + classeTuristaSolo: En fixant toutes les autres co-variables, toutes choses étant égales,
-#           le prix moyen de la classe 'TuristaSolo' diminue de 8.6 par rapport à la classe 'Preferente'.
-# + duree: En fixant toutes les autres co-variables, toutes choses étant égales, 
-#       une augmentation de la duree d'une minute implique une dimunition de 0.24
-#       minutes du prix en moyenne.
-# + is_weekend: En fixant toutes les autres co-variables, toutes choses étant égales,
-#           le prix moyen en fin de semaine augmente de 1.1 par rappot au jour semaine.
-
 # c)
-#***************
-# Destination  #
-#***************
-# H0: β1=0
-# H1: β1#0
-# On ne rejete pas H0, donc il n'y a pas d'effet significatif de la destination sur le prix.
-#***********
-#  classe  #
-#***********
-# H0: β2=0
-# H1: β2#0
-# On rejete H0, donc il y a un effet significatif de la classe sur le prix.
-#***********
-#   Duree  #
-#***********
-# H0: β3=0
-# H1: β3#0
-# On rejete H0, donc il y a un effet significatif de la duree sur le prix.
-#***********
-# weekend  #
-#***********
-# H0: β4=0
-# H1: β4#0
-# On rejete H0, donc il y a un effet significatif de la fin de semaine sur le prix.
 #*******************
 # Le modele global #
 #*******************
@@ -559,15 +476,3 @@ anova(mod)
 # d)
 par(mfrow = c(2,2)) 
 plot(mod)
-# 1) Risiduals vs Fitted (Linéarité - indépendnce): 
-# Les résidus ne suivent pas une forme quadratique, les résidus sont bien éparpillés autour de la ligne.
-# 2) Normal Q-Q (normalité):
-# Les résidus sont bien alignés sur la ligne droite. 
-# 3) Scale-Location (homoscédasticité):
-# La variance devrait être constante
-# La ligne horizontale avec des points répartis également.!?
-# 4) Residuals vs Leverage: 
-# Notre graphique ne montre aucun cas influent, car aucuns des points se trouve 
-# en dehors de la distance de Cook.
-
-
