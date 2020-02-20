@@ -97,7 +97,7 @@ summary(mod4)
 # On considère un modèle linéaire liant la consommation d’essence (en miles au gallon) 
 # des voitures en fonction de leur puissance (en watts).
 
-df4 <- read_sas("./MATH60619.H2020_R/datasets/automobile.sas7bdat")
+df4 <- haven::read_sas("./MATH60619.H2020_R/datasets/automobile.sas7bdat")
 head(df4, n=4)
 
 #   consommation cylindre deplacement puissance masse acceleration annee origine     nom                      
@@ -140,7 +140,7 @@ summary(mod1)
 # explique 60% de la variablité de consommation.
 
 # c) consommation = β0 + β1.puissance + β2.puissance2 + E
-df$puissance2 <- df$puissance^2
+df4$puissance2 <- df4$puissance^2
 
 par(mfrow = c(2,2))
 mod2 <- lm(consommation ~ puissance + puissance2, data=df4)
@@ -162,7 +162,7 @@ summary(mod2)
 # F-statistic:   428 on 2 and 389 DF,  p-value: < 2.2e-16
 
 # d) consommation = β0 + β1.puissance + β2.puissance2 + β3.puissance3 + E
-df$puissance3 <- df$puissance^3
+df4$puissance3 <- df4$puissance^3
 par(mfrow = c(2,2))
 mod3 <- lm(consommation ~ puissance + puissance2 + puissance3, data=df4)
 plot(mod3)
