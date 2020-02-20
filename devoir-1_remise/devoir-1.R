@@ -1,15 +1,16 @@
 library(dplyr)
+library(RVAideMemoire)
 #*******************************************************************************************
 #Q-1) Analyse exploratoire des données renf afin:                                          #                     
 #     + d'évaluer graphiquement les facteurs déterminant les prix et le temps de parcours  #
 #     + de déterminer les caractéristiques distinctives des types de train.                #
 #     + d'établir s'il y a des diffèrences entre les différents tarifs                     #
 #*******************************************************************************************
-df <- read.csv("./renfe_fr.csv", header=TRUE)
+df <- read.csv("../devoir-1/renfe_fr.csv", header=TRUE)
 df$is_weekend <- with(df, ifelse(jour %in% c(1, 7), 1, 0))
 head(df, n=4)
 #    prix type     classe    tarif dest duree jour is_weekend
-# 1 143.4  AVE Preferente    Promo    0   190    6          1
+# 1 143.4  AVE Preferente    Promo    0   190    6          0
 # 2 181.5  AVE Preferente Flexible    0   190    2          0
 # 3  86.8  AVE Preferente    Promo    0   165    7          1
 # 4  86.8  AVE Preferente    Promo    0   190    7          1
@@ -244,7 +245,7 @@ qqline(df3$duree/60, col="steelblue", lwd=2)
 #*************************************************************************************************************
 #Q-4) Comparaison les tarifs moyennes pour les train à grande vitesse pour les deux déstinations (simulation)#
 #*************************************************************************************************************
-df4 <- read.csv("./renfe_simu_fr.csv", header=TRUE)
+df4 <- read.csv("../devoir-1/renfe_simu_fr.csv", header=TRUE)
 head(df4, n=4)
 #     difmoy     statW        icbi       icbs       valp
 # 1 -0.4818434 -1.174404 -1.28609052 0.32240363 0.24026152
