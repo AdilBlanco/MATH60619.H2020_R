@@ -318,14 +318,15 @@ summary(assurance)
 # + region: lieu de résidence, une région parmi sudouest, sudest, nordouest ou nordest,
 # + frais: les frais médicaux annuels en 2013 (en dollars USD).
 
-# Classification        IMC (kg/m2)
-#-------------------------------------------------
-# < 18.5              Insuffisance pondérale
-# 18.5 – 24.9         Corpulence normale
-# 25.0 – 29.9         Surpoids
-# 30.0 – 34.9         Obésité
-# 35.0 – 39.9         Obésité de classe II et III
-#-------------------------------------------------
+#*************************************************#
+# Classification        IMC (kg/m2)               #
+#*************************************************#
+# < 18.5              Insuffisance pondérale      #
+# 18.5 – 24.9         Corpulence normale          #
+# 25.0 – 29.9         Surpoids                    #
+# 30.0 – 34.9         Obésité                     #
+# 35.0 – 39.9         Obésité de classe II et III #
+#*************************************************#
 
 # a)
 colnames(assurance)
