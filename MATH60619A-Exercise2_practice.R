@@ -4,33 +4,37 @@
 
 tickets <-
   haven::read_sas("./MATH60619.H2020_R/datasets/billets.sas7bdat")
+
 head(tickets)
 dim(tickets)
 summary(tickets)
 
 # H0: μ_cash = μ_credit
-# Ha: μ_cash < μ_credit
+# Ha: μ_cash <> μ_credit
 # ou μ_cash est la moyenne des individus payant comptant dans la population
 # et μ_credit est la moyenne des individus payant avec carte de crédit dans la population
 
-t.test(tickets$offre ~ tickets$groupe, alternative = "less")
+t.test(tickets$offre ~ tickets$groupe, alternative = "two.sided")
 # 	Welch Two Sample t-test
 # data:  tickets$offre by tickets$groupe
-# t = -3.3887, df = 35.72, p-value = 0.0008623
-# alternative hypothesis: true difference in means is less than 0
+# t = -3.3887, df = 35.72, p-value = 0.001725
+# alternative hypothesis: true difference in means is not equal to 0
 # 95 percent confidence interval:
-#   -Inf -7.528621
+#   -23.990758  -6.022927
 # sample estimates:
-#   mean in group 0 mean in group 1
-#          56.60606        71.61290
+#   mean in group 0 mean in group 1 
+#          56.60606        71.61290 
 
-# La valeur-p provenant du test-t est de 0.0008623 < 0.05, donc on rejette H0 et on conclut
-# que les individus ayant carte de crédit payent plus chère que les individus ayant comptant.
+# La valeur-p provenant du test de Welch est de 0.001725 < 0.05, donc on rejette H0, on conclut
+# que le montant moyen est différent à un niveau de 5% pour les individus qui paient avec 
+# carte de crédit et ceux qui paient comptant.
 
 #***************
 # Exercice_2-2 #
 #***************
 tickets_extrem <- cbind(tickets)
+# Replace observation by 180
+# tickets_extrem[1,1] <- 180 
 tickets_extrem[1,]$offre <- 210
 
 head(tickets_extrem, n = 2)
@@ -39,7 +43,17 @@ head(tickets_extrem, n = 2)
 # 2    44      0
 
 # a)
-t.test(tickets$offre ~ tickets$groupe, alternative = "two.sided")
+var.test(offre ~ groupe, data = tickets)
+# 	F test to compare two variances
+# data:  offre by groupe
+# F = 0.10206, num df = 32, denom df = 30, p-value = 5.595e-09
+# alternative hypothesis: true ratio of variances is not equal to 1
+# 95 percent confidence interval:
+#   0.04959248 0.20828966
+# sample estimates:
+#   ratio of variances 
+# 0.1020609 
+t.test(tickets$offre ~ tickets$groupe, var.eq = FALSE, alternative = "two.sided")
 # 	Welch Two Sample t-test
 # data:  tickets$offre by tickets$groupe
 # t = -3.3887, df = 35.72, p-value = 0.001725
@@ -49,7 +63,17 @@ t.test(tickets$offre ~ tickets$groupe, alternative = "two.sided")
 # sample estimates:
 #   mean in group 0 mean in group 1
 #          56.60606        71.61290
-t.test(tickets_extrem$offre ~ tickets_extrem$groupe, alternative = "two.sided")
+var.test(offre ~ groupe, data = tickets_extrem)
+# 	F test to compare two variances
+# data:  offre by groupe
+# F = 1.3884, num df = 32, denom df = 30, p-value = 0.369
+# alternative hypothesis: true ratio of variances is not equal to 1
+# 95 percent confidence interval:
+#   0.6746542 2.8335643
+# sample estimates:
+#   ratio of variances 
+# 1.388433 
+t.test(tickets_extrem$offre ~ tickets_extrem$groupe, var.eq = TRUE, alternative = "two.sided")
 # 	Welch Two Sample t-test
 # data:  tickets_extrem$offre by tickets_extrem$groupe
 # t = -1.6385, df = 61.388, p-value = 0.1064
@@ -60,9 +84,9 @@ t.test(tickets_extrem$offre ~ tickets_extrem$groupe, alternative = "two.sided")
 #   mean in group 0 mean in group 1
 #          61.09091        71.61290
 
-# la valeur-p provenant du premier test-t avec les données qui ne contienent pas de valeurs
+# la valeur-p provenant du premier test de Welch avec les données qui ne contienent pas de valeurs
 # abérantes est de 0.001725 < 0.05, donc on rejette H0, alors que la valeur-p provenant du deuxième
-# test-t qui contienent des valeurs abérantes est de 0.1064 > 0.05, donc on ne rejette pas H0.
+# test de Welch qui contienent des valeurs abérantes est de 0.1064 > 0.05, donc on ne rejette pas H0.
 
 # b)
 par(mfrow = c(2, 1))
@@ -184,7 +208,6 @@ boxplot(
 )
 
 # Normalité (avec valeurs abérantes)
-
 par(mfrow = c(3, 2),
     pch = 20,
     bty = 'l')
@@ -421,18 +444,18 @@ var.test(food$desir[food$couleur == 0], food$desir[food$couleur == 1])
 # sample estimates:
 #   ratio of variances
 # 1.215539
-t.test(desir ~ couleur, data = food, var.equal = FALSE)
-# 	Welch Two Sample t-test
+t.test(desir ~ couleur, data = food, var.equal = TRUE)
+# Two Sample t-test
 # data:  desir by couleur
-# t = 2.0095, df = 65.381, p-value = 0.04861
+# t = 2.0095, df = 66, p-value = 0.04857
 # alternative hypothesis: true difference in means is not equal to 0
 # 95 percent confidence interval:
-#   0.07618013 24.21793752
+#   0.0783125 24.2158051
 # sample estimates:
-#   mean in group 0 mean in group 1
-# 61.73529        49.58824
+#   mean in group 0 mean in group 1 
+#          61.73529        49.58824 
 
-# La valeur-p provenant du test de Welch est de 0.04861 < 0.05, donc on rejette H0.
+# La valeur-p provenant du test-t est de 0.04857 < 0.05, donc on rejette H0.
 # Alors la moyenne des deux groupes sont significativement différentes.
 
 #***************
