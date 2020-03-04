@@ -90,6 +90,21 @@ summary(mod4)
 # Multiple R-squared:  0.4497,	Adjusted R-squared:  0.4047 
 # F-statistic: 9.989 on 9 and 110 DF,  p-value: 4.337e-11
 
+anova(mod4)
+# Analysis of Variance Table
+# Response: intention
+# Df Sum Sq Mean Sq F value    Pr(>F)    
+# fixation    1 186.23 186.234 36.3205 2.273e-08 ***
+# emotion     1  33.23  33.234  6.4814 0.0122853 *  
+# sexe        1  69.26  69.257 13.5069 0.0003691 ***
+# age         1 104.52 104.517 20.3836 1.598e-05 ***
+# revenu      2  50.52  25.260  4.9263 0.0089328 ** 
+# educ        2  14.97   7.485  1.4598 0.2367550    
+# statut      1   2.23   2.235  0.4359 0.5104980    
+# Residuals 110 564.03   5.128                      
+# ---
+# Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
 #*****************
 #   EXERCICE-2   #
 #*****************
@@ -127,8 +142,8 @@ summary(mod1)
 #  Min       1Q   Median       3Q      Max 
 # -13.5710  -3.2592  -0.3435   2.7630  16.9240 
 # Coefficients:
-#   Estimate Std. Error t value Pr(>|t|)    
-# (Intercept) 39.935861   0.717499   55.66   <2e-16 ***
+#                Estimate  Std. Error t value  Pr(>|t|)    
+# (Intercept)   39.935861   0.717499   55.66   <2e-16 ***
 #   puissance   -0.157845   0.006446  -24.49   <2e-16 ***
 #   ---
 #   Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
@@ -151,8 +166,8 @@ summary(mod2)
 #    Min       1Q   Median       3Q      Max 
 # -14.7135  -2.5943  -0.0859   2.2868  15.8961 
 # Coefficients:
-#   Estimate Std. Error t value Pr(>|t|)    
-# (Intercept) 56.9000997  1.8004268   31.60   <2e-16 ***
+#                 Estimate Std. Error t value   Pr(>|t|)    
+#   (Intercept) 56.9000997  1.8004268   31.60   <2e-16 ***
 #   puissance   -0.4661896  0.0311246  -14.98   <2e-16 ***
 #   puissance2   0.0012305  0.0001221   10.08   <2e-16 ***
 #   ---
@@ -194,12 +209,21 @@ df3$educ <- relevel(df3$educ, ref="3")
 # (a)
 # intention = β0 + β1.fixation + β2.educ1 + β3.educ2
 mod3_1 <- lm(intention ~ fixation + educ, data=df3)
-summary(mod3_1)$coef
-#         Estimate Std. Error   t value     Pr(>|t|)
-# (Intercept) 5.533543  0.5429172 10.192242 8.301711e-18
-# fixation    1.096846  0.2195556  4.995752 2.091496e-06
-# educ1       1.410459  0.6512014  2.165933 3.236284e-02
-# educ2       1.399775  0.5657071  2.474381 1.479345e-02
+summary(mod3_1)
+# Residuals:
+#     Min      1Q  Median      3Q     Max 
+# -5.4260 -1.9423 -0.1631  2.0572  5.6674 
+# Coefficients:
+#              Estimate Std. Error t value  Pr(>|t|)    
+# (Intercept)   5.5335     0.5429  10.192   < 2e-16 ***
+#   fixation    1.0968     0.2196   4.996   2.09e-06 ***
+#   educ1       1.4105     0.6512   2.166   0.0324 *  
+#   educ2       1.3998     0.5657   2.474   0.0148 *  
+#   ---
+#   Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+# Residual standard error: 2.61 on 116 degrees of freedom
+# Multiple R-squared:  0.229,	Adjusted R-squared:  0.2091 
+# F-statistic: 11.49 on 3 and 116 DF,  p-value: 1.194e-06
 
 # (a-i)
 # intention = 5.533543 + 1.096846.fixation + 1.410459.educ1 + 1.399775.educ2
