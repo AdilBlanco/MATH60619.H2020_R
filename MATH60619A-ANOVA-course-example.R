@@ -1,8 +1,7 @@
 library(dplyr)
-
-#*********************
-# ANOVA à un facteur #
-#*********************
+#************************************************************************************
+#                                     ANOVA à un facteur                            #
+#************************************************************************************
 # Lorsque X contient que les variables catégorielles, le modèle peut être utilisé pour tester les différentes
 # moyennes dans les sous-groupes.
 
@@ -230,6 +229,167 @@ coin::kruskal_test(fiabilite ~ banque, data = df)
 # 	Asymptotic Kruskal-Wallis Test
 # data:  fiabilite by banque (3, 1, 2)
 # chi-squared = 10.024, df = 2, p-value = 0.006659
+
+#************************************************************************************
+#                               ANOVA et tests multiples                            # ???????
+#************************************************************************************
+?pairwise.t.test()
+#Compute p-value for mean differences
+pairwise.t.test(
+  x = df$fiabilite,
+  g = df$banque,
+  p.adjust.method = "holm", #bonferroni
+  pool.sd = FALSE
+)
+#        3     1    
+#  1 0.245     -    
+#  2 0.013 0.183
+
+# I.C
+emmeans::emmeans(oneway, "banque", )
+
+#************************************************************************************
+#                                   ANOVA à deux facteur                            #
+#************************************************************************************
+# Le fichier delai.sas7bdat contient les données simulées correspondant à cette étude, soit:
+# temps: temps (en minutes) de délai estimé par le participant. 
+# eval: évaluation du service en score standardisé.
+# stade: niveau du premier facteur (stade d’avancement)
+# 1.près du but 
+# 2.loin du but
+# delai: niveau du deuxième facteur (type de délai).
+# 1.procédural 
+# 2.correctionnel
+# 3.inconnu
+
+#************
+# En ANOVA à deux facteurs, la notion d’interaction fait référence à laquestion suivante : 
+# «à quel point l’effet d’un facteur est-il différent selon les niveaux de l’autre (et vice-versa)? »
+#************
+df2 <-
+  haven::read_sas("./MATH60619.H2020_R/datasets/delai.sas7bdat")
+
+df2 <- as.data.frame(delai)
+head(df2, n=5)
+#   delai stade temps  eval
+# 1     1     1    11 -1.02
+# 2     1     1    11 -0.69
+# 3     1     1    15 -0.18
+# 4     1     1    20 -0.21
+# 5     1     1    16  0.10
+
+agg <- df2 %>% group_by(stade, delai) %>% summarise(n = n(),
+                                                    mean = mean(eval))
+#  stade delai     n    mean
+# 1 2     3        16  0.261 
+# 2 2     1        17  0.325 
+# 3 2     2        19 -0.783 
+# 4 1     3        19  0.0226
+# 5 1     1        20 -0.435 
+# 6 1     2        18  0.491 
+
+xtabs(mean ~ stade + delai, as.data.frame(agg))
+#      delai
+# stade           3           1           2
+#     2  0.26062500  0.32529412 -0.78315789
+#     1  0.02263158 -0.43500000  0.49111111
+
+table(agg)
+aggregate(df2$eval, list(df2$stade, df2$delai), mean)
+
+sapply(df2, class)
+#     delai     stade     temps      eval 
+#  "numeric" "numeric" "numeric" "numeric"
+
+# Cast categorical variables to factors
+levels(as.factor(df2$delai))
+df2$delai <- relevel(df2$delai, ref = "3")
+df2$delai <- as.factor(df2$delai)
+
+levels(as.factor(df2$stade))
+df2$stade <- relevel(df2$stade, ref = "2")
+df2$stade <- as.factor(df2$stade)
+
+twoway <- lm(eval ~ stade + delai + stade*delai ,data=df2)
+summary(twoway)
+# Residuals:
+#      Min       1Q   Median       3Q      Max 
+# -1.25263 -0.29062  0.04938  0.29737  1.01938 
+# Coefficients:
+#               Estimate Std. Error t value       Pr(>|t|)    
+# (Intercept)    0.26062    0.11372   2.292          0.024 *  
+# stade1        -0.23799    0.15435  -1.542          0.126    
+# delai1         0.06467    0.15845   0.408          0.684    
+# delai2        -1.04378    0.15435  -6.762 0.000000000840 ***
+# stade1:delai1 -0.52230    0.21527  -2.426          0.017 *  
+# stade1:delai2  1.51226    0.21497   7.035 0.000000000226 ***
+#   ---
+#  Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+# Residual standard error: 0.4549 on 103 degrees of freedom
+# Multiple R-squared:  0.5133,	Adjusted R-squared:  0.4897 
+# F-statistic: 21.73 on 5 and 103 DF,  p-value: 0.000000000000008514
+
+anova(twoway)
+# Analysis of Variance Table
+# Response: eval
+#              Df  Sum Sq Mean Sq F value                Pr(>F)    
+# stade         1  0.3267  0.3267  1.5790               0.21175    
+# delai         2  1.6142  0.8071  3.9005               0.02329 *  
+# stade:delai   2 20.5388 10.2694 49.6284 0.0000000000000008074 ***        --> rejetter β4=β4=0
+# Residuals   103 21.3134  0.2069                                  
+# ---
+#   Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+# Il y a effectivement une interaction significative entre les variables delai et stade sur la variable eval.
+# Donc l’effet de la variable delai sur la variable eval dépend du niveau considéré de la variable stade. 
+# Puisqu’on inclut une interaction, les effets globaux de stade et de delai sont sans intérêt.
+
+#************************************************************************************
+#                               ANOVA et tests multiples                            #
+#************************************************************************************
+# Matrix of p-value for pairwise differences
+pvals <- pairwise.t.test(
+                x = df2$eval,
+                g = df2$stade:df2$delai,
+                data=df2,
+                p.adjust.method = "none"
+              )
+pvals
+#     2:3              2:1              2:2              1:3    1:1             
+# 2:1 0.6840           -                -                -      -               
+# 2:2 0.00000000083971 0.00000000006257 -                -      -               
+# 1:3 0.1262           0.0489           0.00000033148616 -      -               
+# 1:1 0.00001418420514 0.00000178756524 0.0187           0.0022 -               
+# 1:2 0.1434           0.2836           0.00000000000014 0.0023 0.00000000870901
+
+#Remove the p-values not of interest
+pvals$p.value[3,2] <- pvals$p.value[3,4] <- pvals$p.value[3,3] <- NA
+pvals$p.value[4,1] <- pvals$p.value[4,3] <- NA
+pvals$p.value[5,1] <- pvals$p.value[5,2] <- NA
+
+#     2:3              2:1              2:2              1:3    1:1             
+# 2:1 0.6840           -                -                -      -               
+# 2:2 0.00000000083971 0.00000000006257 -                -      -               
+# 1:3 0.1262           -                -                -      -               
+# 1:1 -                0.00000178756524 -                0.0022 -               
+# 1:2 -                -                0.00000000000014 0.0023 0.00000000870901
+
+id <- which(!is.na(pvals$p.value))
+# Adjust p-values (Holm stepdown procedure with Bonferroni)
+pvals$p.value[id] <- p.adjust(pvals$p.value[id],"holm")
+pvals
+#     2:3              2:1              2:2              1:3    1:1             
+# 2:1 0.6840           -                -                -      -               
+# 2:2 0.00000000083971 0.00000000006257 -                -      -               
+# 1:3 0.1262           0.0489           0.00000033148616 -      -               
+# 1:1 0.00001418420514 0.00000178756524 0.0187           0.0022 -               
+# 1:2 0.1434           0.2836           0.00000000000014 0.0023 0.00000000870901
+
+# Averages within each level of other variable
+# Also compute mean differences with unadjusted p-values
+simp1 <- emmeans::emmeans(twoway, pairwise ~ stade | delai)
+simp2 <- emmeans::emmeans(twoway, pairwise ~ delai | stade)
+rawpval <- c(simp1$contrasts$p.value, simp2$contrasts$p.value)
 
 
 
