@@ -389,14 +389,15 @@ pvals
 # Also compute mean differences with unadjusted p-values
 simp1 <- emmeans::emmeans(twoway, pairwise ~ stade | delai)
 simp2 <- emmeans::emmeans(twoway, pairwise ~ delai | stade)
-rawpval <- c(simp1$contrasts$p.value, simp2$contrasts$p.value)
-
-
-
-
-
-
-
+# rawpval <- c(simp1$contrasts$p.value, simp2$contrasts$p.value)
+rawpval <- c(as.list(emmeans::test(simp1)$contrast)$p.value, as.list(emmeans::test(simp2)$contrast)$p.value)
+# [1] 0.126161224906778086 0.000001787565235545 0.000000000000143686 0.912353163991628691 0.000000002516072906
+# [6] 0.000000000187596605 0.006187988958856305 0.006363208697141687 0.000000026073130766
+# Step-down Sidak adjustment
+stepdownsidak <- function(p){
+  cummax(1 - (1 - sort(p))^(length(p):1))[rank(p)]
+}
+stepdownsidak(rawpval) < 0.05
 
 
 

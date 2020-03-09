@@ -373,13 +373,69 @@ col = "red",
 lwd = 2)
 
 
+colnames(ameshousing)
+# [1] "SalePrice"    "LotArea"      "Bedrooms"     "GarageArea"   "OverallCond"  "OverallQual"  "housetype"   
+# [8] "YearBuilt"    "YearRemodAdd" "YrSold"       "HalfBath"     "FullBath"     "Garage"       "status"      
+# [15] "HouseAge"     "RemodAge"    
 
+sapply(ameshousing, class)
+# Residuals:
+#     Min      1Q  Median      3Q     Max 
+# -323350  -21959   -2274   17331  365646 
+# Coefficients: (2 not defined because of singularities)
+# Estimate   Std. Error t value             Pr(>|t|)    
+# (Intercept)      626871.3229 1600240.5377   0.392             0.695311    
+# LotArea               0.8748       0.1116   7.836  0.00000000000000898 ***
+# Bedrooms           2195.1982    1494.4685   1.469             0.142083    
+# GarageArea           81.9962       7.3502  11.156 < 0.0000000000000002 ***
+# OverallCond        2744.8003    1132.0957   2.425             0.015450 *  
+# OverallQual       29312.7253    1124.5008  26.067 < 0.0000000000000002 ***
+# housetype2fmCon  -14846.6346    7626.0625  -1.947             0.051749 .  
+# housetypeDuplex  -17907.0385    6053.6709  -2.958             0.003146 ** 
+# housetypeTwnhs   -21210.7374    3907.2352  -5.429  0.00000006655482594 ***
+# YearBuilt           243.0738      66.4043   3.661             0.000261 ***
+# YearRemodAdd        -44.2235      80.0948  -0.552             0.580939    
+# YrSold             -567.5281     797.2056  -0.712             0.476644    
+# HalfBath          12344.0997    2058.8121   5.996  0.00000000255559340 ***
+# FullBath          21574.9840    1900.1104  11.355 < 0.0000000000000002 ***
+# Garage1           26166.9114    5691.1760   4.598  0.00000464299853296 ***
+# statusNew         12542.8233    5539.8706   2.264             0.023716 *  
+# statusRemodled    13954.3393    2655.7842   5.254  0.00000017085341819 ***
+# HouseAge                  NA           NA      NA                   NA    
+# RemodAge                  NA           NA      NA                   NA    
+# ---
+# Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+# Residual standard error: 39910 on 1443 degrees of freedom
+# Multiple R-squared:  0.7503,	Adjusted R-squared:  0.7476 
+# F-statistic:   271 on 16 and 1443 DF,  p-value: < 0.00000000000000022
 
-
-
-
-
-
+ameshousing$housetype <- factor(ameshousing$housetype)
+ameshousing$Garage <- factor(ameshousing$Garage)
+ameshousing$status <- factor(ameshousing$status)
+mod <- lm(SalePrice ~ LotArea+Bedrooms+GarageArea+OverallCond+OverallQual+housetype+YearBuilt+YearRemodAdd+
+            YrSold+HalfBath+FullBath+Garage+status+HouseAge+RemodAge, data=ameshousing)
+summary(mod)
+anova(mod)
+# Analysis of Variance Table
+# Response: SalePrice
+#                Df        Sum Sq       Mean Sq   F value                Pr(>F)    
+# LotArea         1  640993235747  640993235747  402.3315 < 0.00000000000000022 ***
+# Bedrooms        1  174398912096  174398912096  109.4648 < 0.00000000000000022 ***
+# GarageArea      1 3096105112931 3096105112931 1943.3289 < 0.00000000000000022 ***
+# OverallCond     1    1123280993    1123280993    0.7050             0.4012316    
+# OverallQual     1 2536502784215 2536502784215 1592.0839 < 0.00000000000000022 ***
+# housetype       3   32408277420   10802759140    6.7806             0.0001538 ***
+# YearBuilt       1   67986275584   67986275584   42.6729      0.00000000008945 ***
+# YearRemodAdd    1   28001540226   28001540226   17.5757      0.00002928808550 ***
+# YrSold          1     288609829     288609829    0.1812             0.6704491    
+# HalfBath        1   19552949928   19552949928   12.2728             0.0004736 ***
+# FullBath        1  227135635226  227135635226  142.5660 < 0.00000000000000022 ***
+# Garage          1   37977244554   37977244554   23.8371      0.00000116497751 ***
+# status          2   46454638662   23227319331   14.5791      0.00000053890657 ***
+# Residuals    1443 2298982837200    1593196699                                    
+#---
+#  Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+mod
 
 
 
