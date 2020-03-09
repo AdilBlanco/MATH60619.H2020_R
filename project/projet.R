@@ -35,6 +35,14 @@ sapply(ameshousing, class)
 # YearRemodAdd    YrSold     HalfBath     FullBath       Garage
 # "integer"    "integer"    "integer"    "integer"    "integer"
 
+# convert integer to numeric
+ameshousing <- ameshousing %>% mutate_if(is.integer,as.numeric)
+sapply(ameshousing, class)
+# SalePrice      LotArea     Bedrooms   GarageArea  OverallCond  OverallQual    housetype    YearBuilt YearRemodAdd 
+# "numeric"    "numeric"    "numeric"    "numeric"    "numeric"    "numeric"     "factor"    "numeric"    "numeric" 
+# YrSold     HalfBath     FullBath       Garage 
+# "numeric"    "numeric"    "numeric"    "numeric" 
+
 summary(ameshousing)
 #    SalePrice         LotArea          Bedrooms       GarageArea      OverallCond     OverallQual      housetype
 # Min.   : 34900   Min.   :  1300   Min.   :0.000   Min.   :   0.0   Min.   :1.000   Min.   : 1.000   1Fam  :1220
@@ -51,9 +59,34 @@ summary(ameshousing)
 # 3rd Qu.:2000   3rd Qu.:2004   3rd Qu.:2009   3rd Qu.:1.0000   3rd Qu.:2.00   3rd Qu.:0.00000
 # Max.   :2010   Max.   :2010   Max.   :2010   Max.   :4.0000   Max.   :6.00   Max.   :1.00000
 
-# add is new or not (binary)
-ameshousing$isRemod <-
-  with(ameshousing, ifelse(YearBuilt == YearRemodAdd, 0, 1))
+nrow(ameshousing[ameshousing$YearBuilt==ameshousing$YrSold, ])         # new 64
+nrow(ameshousing[(ameshousing$YearBuilt != ameshousing$YearRemodAdd) & 
+                   (ameshousing$YearBuilt!=ameshousing$YrSold), ])     # remodled 695
+nrow(ameshousing[(ameshousing$YearBuilt == ameshousing$YearRemodAdd) & 
+                   (ameshousing$YearBuilt!=ameshousing$YrSold), ])     # Never remodled 701 
+
+ameshousing$status  <- with(ameshousing, ifelse(YearBuilt==YrSold, 
+                                                "New", 
+                                                ifelse((YearBuilt!=YearRemodAdd) & (YearBuilt!=YrSold), 
+                                                       "Remodled", 
+                                                          "NeverRemod"
+                                                       )
+                                                )
+                            )
+
+ameshousing %>% group_by(status) %>% summarise(n = n(), mean = mean(SalePrice))
+# status         n    mean
+#   <chr>      <int>   <dbl>
+# 1 NeverRemod   701 175126.
+# 2 New           64 264302.
+# 3 Remodled     695 179088.
+
+# add is remodled or not
+# ameshousing$isRemod <-
+#   with(ameshousing, ifelse(YearBuilt == YearRemodAdd, 0, 1))
+# add is new or not
+# ameshousing$isNew <-
+#   with(ameshousing, ifelse(YearBuilt == YrSold, 1, 0))
 # group Twnhs & TwnhsE
 ameshousing$housetype[ameshousing$housetype == "TwnhsE"] <- "Twnhs"
 # add house age column
@@ -62,9 +95,98 @@ ameshousing$HouseAge <- ameshousing$YrSold - ameshousing$YearBuilt
 ameshousing$RemodAge <-
   ameshousing$YrSold - ameshousing$YearRemodAdd
 
+# Aggregation
+agg_Bedrooms <- ameshousing %>% group_by(Bedrooms) %>% summarise(n = n(), mean = mean(SalePrice))
+xtabs(mean ~ Bedrooms, as.data.frame(agg_Bedrooms))
+# Bedrooms
+#        0        1        2        3        4        5        6        8 
+# 221493.2 173162.4 158197.7 181056.9 220421.3 180819.0 143779.0 200000.0 
+agg_OverallCond <- ameshousing %>% group_by(OverallCond) %>% summarise(n = n(), mean = mean(SalePrice))
+xtabs(mean ~ OverallCond, as.data.frame(agg_OverallCond))
+# OverallCond
+#       1        2        3        4        5        6        7        8        9 
+# 61000.0 141986.4 101929.4 120438.4 203146.9 153961.6 158145.5 155651.7 216004.5 
+agg_OverallQual <- ameshousing %>% group_by(OverallQual) %>% summarise(n = n(), mean = mean(SalePrice))
+xtabs(mean ~ OverallQual, as.data.frame(agg_OverallQual))
+# OverallQual
+#        1         2         3         4         5         6         7         8         9        10 
+# 50150.00  51770.33  87473.75 108420.66 133523.35 161603.03 207716.42 274735.54 367513.02 438588.39  
+agg_housetype <- ameshousing %>% group_by(housetype) %>% summarise(n = n(), mean = mean(SalePrice))
+xtabs(mean ~ housetype, as.data.frame(agg_housetype))
+# housetype
+#     1Fam   2fmCon   Duplex    Twnhs 
+# 185763.8 128432.3 133541.1 169347.5 
+agg_YrSold <- ameshousing %>% group_by(YrSold) %>% summarise(n = n(), mean = mean(SalePrice))
+xtabs(mean ~ YrSold, as.data.frame(agg_YrSold))
+# YrSold
+# 2006     2007     2008     2009     2010 
+# 182549.5 186063.2 177360.8 179432.1 177393.7 
+agg_HalfBath <- ameshousing %>% group_by(HalfBath) %>% summarise(n = n(), mean = mean(SalePrice))
+xtabs(mean ~ HalfBath, as.data.frame(agg_HalfBath))
+# HalfBath
+#        0        1        2        3        4 
+# 162489.8 207875.0 193360.2 170000.0 194201.0 
+agg_FullBath <- ameshousing %>% group_by(FullBath) %>% summarise(n = n(), mean = mean(SalePrice))
+xtabs(mean ~ FullBath, as.data.frame(agg_FullBath))
+# FullBath
+#        0        1        2        3        4        6 
+# 194201.0 124160.1 174382.0 254481.2 319021.9 179000.0 
+agg_Garage <- ameshousing %>% group_by(Garage) %>% summarise(n = n(), mean = mean(SalePrice))
+xtabs(mean ~ Garage, as.data.frame(agg_Garage))
+# Garage
+#        0        1 
+# 185479.5 103317.3 
+agg_status <- ameshousing %>% group_by(status) %>% summarise(n = n(), mean = mean(SalePrice))
+xtabs(mean ~ status, as.data.frame(agg_status))
+# status
+# NeverRemod      New   Remodled 
+# 175126.0   264302.2   179088.2 
+agg_YrSold_status <- ameshousing %>% group_by(status, YrSold) %>% summarise(n = n(), mean = mean(SalePrice))
+tab <- xtabs(mean ~ status + YrSold, as.data.frame(agg_YrSold_status))
+tab
+# YrSold
+# status         2006     2007     2008     2009     2010
+# NeverRemod 170065.6 177366.7 171762.1 180335.4 175729.5
+# New        249813.5 261336.0 321783.4 252351.1 394432.0
+# Remodled   184707.8 183742.8 175967.7 174005.3 176614.0
+
+status <- unique(as.vector(as.data.frame(tab)$status))
+colors <- c("springgreen", "lightgoldenrod", "lightpink")
+par(mfrow = c(1, 1))
+barplot(tab, main="New houses Distribution by YrSold & status",
+        xlab="YrSold", ylab="mean(SalePrice)", col=colors, beside=TRUE)
+legend("topleft", legend=status, col=colors, bg="white", lwd=2, cex = 0.6)
+
+par(mfrow = c(1, 2))
+agg_YearBuilte <- ameshousing %>% group_by(YearBuilt) %>% summarise(n = n(), mean = mean(SalePrice))
+plot(agg_YearBuilte$YearBuilt, agg_YearBuilte$mean, type="o", 
+     col="green", lwd=2, xlab="YearBuilt", ylab="mean(SalePrice)", main="mean(SalePrice) by YearBuilt")
+
+agg_YearRemodAdd <- ameshousing %>% group_by(YearRemodAdd) %>% summarise(n = n(), mean = mean(SalePrice))
+plot(agg_YearRemodAdd$YearRemodAdd, agg_YearRemodAdd$mean, type="o", 
+     col="green", lwd=2, xlab="YearRemodAdd", ylab="mean(SalePrice)", main="mean(SalePrice) by YearRemodAdd")
+
+par(mfrow = c(1, 1))
+agg_HouseAge <- ameshousing %>% group_by(HouseAge) %>% summarise(n = n(), mean = mean(SalePrice))
+plot(agg_HouseAge$HouseAge, agg_HouseAge$mean, type="o", 
+     col="green", lwd=2, xlab="HouseAge", ylab="mean(SalePrice)", main="mean(SalePrice) by HouseAge")
+
+# par(mfrow = c(1, 2))
+# agg_HouseAge_status <- ameshousing %>% group_by(status, HouseAge) %>% summarise(n = n(), mean = mean(SalePrice))
+# v <- agg_HouseAge_status$mean[agg_HouseAge_status$status=="NeverRemod"]
+# t <- agg_HouseAge_status$mean[agg_HouseAge_status$status=="New"]
+# s <- agg_HouseAge_status$mean[agg_HouseAge_status$status=="Remodled"]
+# plot(v, type="o", lwd=2, col = "red", xlab="HouseAge", xlim=c(0, 140), ylim=c(100000,460000), ylab="mean(SalePrice)", main="mean(SalePrice) by HouseAge")
+# lines(t, type="o", lwd=2, col="blue")
+# lines(s, type="o", lwd=2, col="green")
+
+# plot_YrSold <- tapply(ameshousing$SalePrice, ameshousing$YrSold, FUN=mean)
+# barplot(plot_YrSold, col="lightblue", main="mean(SalePrice) by YrSold", 
+#         xlab="YrSold", ylab="mean(SalePrice)")
+
 # histogram SalePrice
 par(mfrow = c(1, 1))
-hist(ameshousing$SalePrice, col = "lightblue")
+hist(ameshousing$SalePrice, col="lightblue")
 abline(
   v = mean(ameshousing$SalePrice),
   col = "green",
@@ -142,14 +264,14 @@ boxplot(
 )
 # bxplot Remodled
 boxplot(
-  SalePrice ~ isRemod,
+  SalePrice ~ status,
   data = ameshousing,
   boxwex = .3,
   staplewex = .6,
   col = "lightblue",
-  xlab = "remodled",
+  xlab = "status",
   ylab = "SalePrice (USD)",
-  main = "House is remodled",
+  main = "House status",
   frame = FALSE
 )
 # bxplot HalfBath
@@ -249,3 +371,15 @@ lines(curve(
 ),
 col = "red",
 lwd = 2)
+
+
+
+
+
+
+
+
+
+
+
+
