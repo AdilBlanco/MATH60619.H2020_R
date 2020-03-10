@@ -1,4 +1,5 @@
 options(scipen = 999)
+library(dplyr)
 # SalePrice : Prix de vente en (USD)
 # LotArea : surface du lot (en pieds carrés)
 # Bedrooms : nombre de chambres à coucher (excluant le sous-sol)
@@ -65,6 +66,7 @@ nrow(ameshousing[(ameshousing$YearBuilt != ameshousing$YearRemodAdd) &
 nrow(ameshousing[(ameshousing$YearBuilt == ameshousing$YearRemodAdd) & 
                    (ameshousing$YearBuilt!=ameshousing$YrSold), ])     # Never remodled 701 
 
+# create new column status (new house, old house never emdled & old house remodled )
 ameshousing$status  <- with(ameshousing, ifelse(YearBuilt==YrSold, 
                                                 "New", 
                                                 ifelse((YearBuilt!=YearRemodAdd) & (YearBuilt!=YrSold), 
@@ -151,25 +153,40 @@ tab
 # Remodled   184707.8 183742.8 175967.7 174005.3 176614.0
 
 status <- unique(as.vector(as.data.frame(tab)$status))
-colors <- c("springgreen", "lightgoldenrod", "lightpink")
+colors <- c("cornflowerblue", "lightgoldenrod", "lightpink")
 par(mfrow = c(1, 1))
 barplot(tab, main="New houses Distribution by YrSold & status",
         xlab="YrSold", ylab="mean(SalePrice)", col=colors, beside=TRUE)
 legend("topleft", legend=status, col=colors, bg="white", lwd=2, cex = 0.6)
 
-par(mfrow = c(1, 2))
-agg_YearBuilte <- ameshousing %>% group_by(YearBuilt) %>% summarise(n = n(), mean = mean(SalePrice))
-plot(agg_YearBuilte$YearBuilt, agg_YearBuilte$mean, type="o", 
-     col="green", lwd=2, xlab="YearBuilt", ylab="mean(SalePrice)", main="mean(SalePrice) by YearBuilt")
+par(mfrow = c(2, 2))
+plot(agg_YearBuilte$YearBuilt, agg_YearBuilte$mean, xaxt = 'n',
+     col="cornflowerblue", lwd=1, xlab="YearBuilt", ylab="mean(SalePrice)", main="mean(SalePrice) by YearBuilt")
+axis(side=1, at=c(1872, 1940, 2010), labels=c("1872", "1940", "2010"))
 
 agg_YearRemodAdd <- ameshousing %>% group_by(YearRemodAdd) %>% summarise(n = n(), mean = mean(SalePrice))
-plot(agg_YearRemodAdd$YearRemodAdd, agg_YearRemodAdd$mean, type="o", 
-     col="green", lwd=2, xlab="YearRemodAdd", ylab="mean(SalePrice)", main="mean(SalePrice) by YearRemodAdd")
+plot(agg_YearRemodAdd$YearRemodAdd, agg_YearRemodAdd$mean, xaxt = 'n',
+     col="cornflowerblue", lwd=1, xlab="YearRemodAdd", ylab="mean(SalePrice)", main="mean(SalePrice) by YearRemodAdd")
+axis(side=1, at=c(1950, 1980, 2010), labels=c("1950", "1980", "2010"))
 
-par(mfrow = c(1, 1))
+agg_YearBuilte <- ameshousing %>% group_by(YearBuilt) %>% summarise(n = n(), mean = mean(SalePrice))
+plot(agg_YearBuilte$YearBuilt, agg_YearBuilte$mean, type="o", xaxt = 'n',
+     col="cornflowerblue", lwd=1, xlab="YearBuilt", ylab="mean(SalePrice)", main="mean(SalePrice) by YearBuilt")
+axis(side=1, at=c(1872, 1940, 2010), labels=c("1872", "1940", "2010"))
+
+agg_YearRemodAdd <- ameshousing %>% group_by(YearRemodAdd) %>% summarise(n = n(), mean = mean(SalePrice))
+plot(agg_YearRemodAdd$YearRemodAdd, agg_YearRemodAdd$mean, type="o", xaxt = 'n',
+     col="cornflowerblue", lwd=1, xlab="YearRemodAdd", ylab="mean(SalePrice)", main="mean(SalePrice) by YearRemodAdd")
+axis(side=1, at=c(1950, 1980, 2010), labels=c("1950", "1980", "2010"))
+
+par(mfrow = c(1, 2))
+agg_HouseAge <- ameshousing %>% group_by(HouseAge) %>% summarise(n = n(), mean = mean(SalePrice))
+plot(agg_HouseAge$HouseAge, agg_HouseAge$mean,
+     col="cornflowerblue", lwd=2, xlab="HouseAge", ylab="mean(SalePrice)", main="mean(SalePrice) by HouseAge")
+
 agg_HouseAge <- ameshousing %>% group_by(HouseAge) %>% summarise(n = n(), mean = mean(SalePrice))
 plot(agg_HouseAge$HouseAge, agg_HouseAge$mean, type="o", 
-     col="green", lwd=2, xlab="HouseAge", ylab="mean(SalePrice)", main="mean(SalePrice) by HouseAge")
+     col="cornflowerblue", lwd=2, xlab="HouseAge", ylab="mean(SalePrice)", main="mean(SalePrice) by HouseAge")
 
 # par(mfrow = c(1, 2))
 # agg_HouseAge_status <- ameshousing %>% group_by(status, HouseAge) %>% summarise(n = n(), mean = mean(SalePrice))
@@ -185,15 +202,15 @@ plot(agg_HouseAge$HouseAge, agg_HouseAge$mean, type="o",
 #         xlab="YrSold", ylab="mean(SalePrice)")
 
 # histogram SalePrice
-par(mfrow = c(1, 1))
-hist(ameshousing$SalePrice, col="lightblue")
-abline(
-  v = mean(ameshousing$SalePrice),
-  col = "green",
-  lwd = 2,
-  lty = 2
-)
-abline(v = median(ameshousing$SalePrice), col = "red")
+# par(mfrow = c(1, 1))
+# hist(ameshousing$SalePrice, col="lightblue")
+#abline(
+#   v = mean(ameshousing$SalePrice),
+#   col = "green",
+#   lwd = 2,
+#   lty = 2
+# )
+# abline(v = median(ameshousing$SalePrice), col = "red")
 
 # correlation
 par(mfrow = c(1, 1))
@@ -202,26 +219,27 @@ ameshousingCor <-
 corrplot::corrplot(ameshousingCor, method = "number", type = "upper")
 
 # plot SalePrice vs LotArea by housetype
-par(mfrow = c(1, 1))
-ameshousing$housetype <- factor(ameshousing$housetype)
-plot(
-  SalePrice ~ LotArea,
-  data = ameshousing,
-  col = c("red", "blue", "green", "black")[housetype],
-  pch = c(4, 4, 4, 4)[housetype]
-)
-legend(
-  x = "right",
-  legend = levels(ameshousing$housetype),
-  col = c("red", "blue", "green", "black"),
-  pch = c(4, 4, 4, 4),
-  cex = 0.75
-)
+# par(mfrow = c(1, 1))
+# ameshousing$housetype <- factor(ameshousing$housetype)
+# plot(
+#   SalePrice ~ LotArea,
+#   data = ameshousing,
+#   col = c("red", "blue", "green", "black")[housetype],
+#   pch = c(4, 4, 4, 4)[housetype]
+# )
+# legend(
+#   x = "right",
+#   legend = levels(ameshousing$housetype),
+#   col = c("red", "blue", "green", "black"),
+#   pch = c(4, 4, 4, 4),
+#   cex = 0.75
+# )
 
-plot(SalePrice ~ LotArea, data = ameshousing)
-plot(SalePrice ~ GarageArea, data = ameshousing)
-plot(SalePrice ~ YearBuilt, data = ameshousing)
-plot(SalePrice ~ YearRemodAdd, data = ameshousing)
+plot(SalePrice ~ LotArea, data=ameshousing, col="cornflowerblue")
+plot(SalePrice ~ GarageArea, data=ameshousing, col="cornflowerblue")
+plot(SalePrice ~ YearBuilt, data=ameshousing, col="cornflowerblue")
+plot(SalePrice ~ YearRemodAdd, data=ameshousing, col="cornflowerblue")
+
 plot(SalePrice ~ HouseAge, data = ameshousing) #redendance (YearBuilt), chech corelation heatmap
 plot(SalePrice ~ RemodAge, data = ameshousing) #redendance (RemodAge), chech corelation heatmap
 
@@ -379,6 +397,13 @@ colnames(ameshousing)
 # [15] "HouseAge"     "RemodAge"    
 
 sapply(ameshousing, class)
+
+ameshousing$housetype <- factor(ameshousing$housetype)
+ameshousing$Garage <- factor(ameshousing$Garage)
+ameshousing$status <- factor(ameshousing$status)
+mod <- lm(SalePrice ~ LotArea+Bedrooms+GarageArea+OverallCond+OverallQual+housetype+YearBuilt+YearRemodAdd+
+            YrSold+HalfBath+FullBath+Garage+status+HouseAge+RemodAge, data=ameshousing)
+summary(mod)
 # Residuals:
 #     Min      1Q  Median      3Q     Max 
 # -323350  -21959   -2274   17331  365646 
@@ -409,12 +434,6 @@ sapply(ameshousing, class)
 # Multiple R-squared:  0.7503,	Adjusted R-squared:  0.7476 
 # F-statistic:   271 on 16 and 1443 DF,  p-value: < 0.00000000000000022
 
-ameshousing$housetype <- factor(ameshousing$housetype)
-ameshousing$Garage <- factor(ameshousing$Garage)
-ameshousing$status <- factor(ameshousing$status)
-mod <- lm(SalePrice ~ LotArea+Bedrooms+GarageArea+OverallCond+OverallQual+housetype+YearBuilt+YearRemodAdd+
-            YrSold+HalfBath+FullBath+Garage+status+HouseAge+RemodAge, data=ameshousing)
-summary(mod)
 anova(mod)
 # Analysis of Variance Table
 # Response: SalePrice
