@@ -84,11 +84,11 @@ ameshousing %>% group_by(status) %>% summarise(n = n(), mean = mean(SalePrice))
 # 3 Remodled     695 179088.
 
 # add is remodled or not
-# ameshousing$isRemod <-
-#   with(ameshousing, ifelse(YearBuilt == YearRemodAdd, 0, 1))
+ameshousing$isRemod <-
+  with(ameshousing, ifelse(YearBuilt == YearRemodAdd, 0, 1))
 # add is new or not
-# ameshousing$isNew <-
-#   with(ameshousing, ifelse(YearBuilt == YrSold, 1, 0))
+ameshousing$isNew <-
+  with(ameshousing, ifelse(YearBuilt == YrSold, 1, 0))
 # group Twnhs & TwnhsE
 ameshousing$housetype[ameshousing$housetype == "TwnhsE"] <- "Twnhs"
 # add house age column
@@ -401,40 +401,96 @@ sapply(ameshousing, class)
 ameshousing$housetype <- factor(ameshousing$housetype)
 ameshousing$Garage <- factor(ameshousing$Garage)
 ameshousing$status <- factor(ameshousing$status)
+ameshousing$isRemod <- factor(ameshousing$isRemod)
+ameshousing$isNew <- factor(ameshousing$isNew)
 mod <- lm(SalePrice ~ LotArea+Bedrooms+GarageArea+OverallCond+OverallQual+housetype+YearBuilt+YearRemodAdd+
-            YrSold+HalfBath+FullBath+Garage+status+HouseAge+RemodAge, data=ameshousing)
+            YrSold+HalfBath+FullBath+Garage+status+HouseAge+RemodAge+isRemod+isNew, data=ameshousing)
 summary(mod)
 # Residuals:
 #     Min      1Q  Median      3Q     Max 
-# -323350  -21959   -2274   17331  365646 
-# Coefficients: (2 not defined because of singularities)
+# -330587  -22626   -2217   17417  363831 
+# Coefficients: (3 not defined because of singularities)
 # Estimate   Std. Error t value             Pr(>|t|)    
-# (Intercept)      626871.3229 1600240.5377   0.392             0.695311    
-# LotArea               0.8748       0.1116   7.836  0.00000000000000898 ***
-# Bedrooms           2195.1982    1494.4685   1.469             0.142083    
-# GarageArea           81.9962       7.3502  11.156 < 0.0000000000000002 ***
-# OverallCond        2744.8003    1132.0957   2.425             0.015450 *  
-# OverallQual       29312.7253    1124.5008  26.067 < 0.0000000000000002 ***
-# housetype2fmCon  -14846.6346    7626.0625  -1.947             0.051749 .  
-# housetypeDuplex  -17907.0385    6053.6709  -2.958             0.003146 ** 
-# housetypeTwnhs   -21210.7374    3907.2352  -5.429  0.00000006655482594 ***
-# YearBuilt           243.0738      66.4043   3.661             0.000261 ***
-# YearRemodAdd        -44.2235      80.0948  -0.552             0.580939    
-# YrSold             -567.5281     797.2056  -0.712             0.476644    
-# HalfBath          12344.0997    2058.8121   5.996  0.00000000255559340 ***
-# FullBath          21574.9840    1900.1104  11.355 < 0.0000000000000002 ***
-# Garage1           26166.9114    5691.1760   4.598  0.00000464299853296 ***
-# statusNew         12542.8233    5539.8706   2.264             0.023716 *  
-# statusRemodled    13954.3393    2655.7842   5.254  0.00000017085341819 ***
+# (Intercept)      682429.3445 1581067.0799   0.432             0.666078    
+# LotArea               0.9137       0.1105   8.269 0.000000000000000303 ***
+# Bedrooms           2010.0937    1476.8572   1.361             0.173707    
+# GarageArea           81.9923       7.2620  11.291 < 0.0000000000000002 ***
+# OverallCond        2749.0329    1118.5125   2.458             0.014098 *  
+# OverallQual       29540.7575    1111.6538  26.574 < 0.0000000000000002 ***
+# housetype2fmCon  -15278.8453    7534.9036  -2.028             0.042770 *  
+# housetypeDuplex  -17869.7978    5981.0395  -2.988             0.002858 ** 
+# housetypeTwnhs   -21151.8490    3860.3669  -5.479 0.000000050344996787 ***
+# YearBuilt           231.4288      65.6361   3.526             0.000435 ***
+# YearRemodAdd        -51.3580      79.1427  -0.649             0.516488    
+# YrSold             -577.9289     787.6423  -0.734             0.463223    # HalfBath          12688.5513    2034.9137   6.235 0.000000000590578545 ***
+# FullBath          22101.5798    1879.3478  11.760 < 0.0000000000000002 ***
+# Garage1           26475.9859    5623.1250   4.708 0.000002736703209979 ***
+# statusNew         16142.0790    5505.9404   2.932             0.003424 ** 
+# statusRemodled   254493.8621   40031.5705   6.357 0.000000000274819528 ***
 # HouseAge                  NA           NA      NA                   NA    
 # RemodAge                  NA           NA      NA                   NA    
+# isRemod1        -240660.8884   39965.6387  -6.022 0.000000002186465026 ***
+# isNew1                    NA           NA      NA                   NA  
 # ---
 # Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-# Residual standard error: 39910 on 1443 degrees of freedom
-# Multiple R-squared:  0.7503,	Adjusted R-squared:  0.7476 
-# F-statistic:   271 on 16 and 1443 DF,  p-value: < 0.00000000000000022
+# Residual standard error: 39440 on 1442 degrees of freedom
+# Multiple R-squared:  0.7564,	Adjusted R-squared:  0.7536 
+# F-statistic: 263.5 on 17 and 1442 DF,  p-value: < 0.00000000000000022
+mod1 <- lm(SalePrice ~ LotArea+Bedrooms+GarageArea+OverallCond+OverallQual+housetype+YearBuilt+YearRemodAdd+
+                  YrSold+HalfBath+FullBath+Garage+status+isRemod, data=ameshousing)
+# Residuals:
+#     Min      1Q  Median      3Q     Max 
+# -330587  -22626   -2217   17417  363831 
+# Coefficients:
+# Estimate   Std. Error t value             Pr(>|t|)    
+# (Intercept)      682429.3445 1581067.0799   0.432             0.666078    
+# LotArea               0.9137       0.1105   8.269 0.000000000000000303 ***
+# Bedrooms           2010.0937    1476.8572   1.361             0.173707    
+# GarageArea           81.9923       7.2620  11.291 < 0.0000000000000002 ***
+# OverallCond        2749.0329    1118.5125   2.458             0.014098 *  
+# OverallQual       29540.7575    1111.6538  26.574 < 0.0000000000000002 ***
+# housetype2fmCon  -15278.8453    7534.9036  -2.028             0.042770 *  
+# housetypeDuplex  -17869.7978    5981.0395  -2.988             0.002858 ** 
+# housetypeTwnhs   -21151.8490    3860.3669  -5.479 0.000000050344996787 ***
+# YearBuilt           231.4288      65.6361   3.526             0.000435 ***
+# YearRemodAdd        -51.3580      79.1427  -0.649             0.516488    
+# YrSold             -577.9289     787.6423  -0.734             0.463223    
+# HalfBath          12688.5513    2034.9137   6.235 0.000000000590578545 ***
+# FullBath          22101.5798    1879.3478  11.760 < 0.0000000000000002 ***
+# Garage1           26475.9859    5623.1250   4.708 0.000002736703209979 ***
+# statusNew         16142.0790    5505.9404   2.932             0.003424 ** 
+# statusRemodled   254493.8621   40031.5705   6.357 0.000000000274819528 ***
+# isRemod1        -240660.8884   39965.6387  -6.022 0.000000002186465026 ***
+# ---
+# Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+# Residual standard error: 39440 on 1442 degrees of freedom
+# Multiple R-squared:  0.7564,	Adjusted R-squared:  0.7536 
+#F-statistic: 263.5 on 17 and 1442 DF,  p-value: < 0.00000000000000022
+summary(mod1)
+car::vif(mod1)
+#                    GVIF Df GVIF^(1/(2*Df))
+# LotArea        1.141057  1        1.068203
+# Bedrooms       1.361732  1        1.166933
+# GarageArea     2.261633  1        1.503873
+# OverallCond    1.453403  1        1.205572
+# OverallQual    2.217440  1        1.489107
+# housetype      1.683623  3        1.090705
+# YearBuilt      3.686833  1        1.920113
+# YearRemodAdd   2.504604  1        1.582594
+# YrSold         1.026566  1        1.013196
+# HalfBath       1.192358  1        1.091952
+# FullBath       1.775668  1        1.332542
+# Garage         1.555490  1        1.247193
+# status       422.663382  2        4.534179
+# isRemod      374.057694  1       19.340571
+mod2 <- lm(SalePrice ~ LotArea+Bedrooms+GarageArea+OverallCond+OverallQual+housetype+YearBuilt+YearRemodAdd+
+             YrSold+HalfBath+FullBath+Garage+status, data=ameshousing)
+summary(mod2)
 
-anova(mod)
+par(mfrow = c(2,2)) 
+plot(mod2)
+
+anova(mod2)
 # Analysis of Variance Table
 # Response: SalePrice
 #                Df        Sum Sq       Mean Sq   F value                Pr(>F)    
@@ -454,7 +510,6 @@ anova(mod)
 # Residuals    1443 2298982837200    1593196699                                    
 #---
 #  Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-mod
 
 
 
