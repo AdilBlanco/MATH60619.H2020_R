@@ -425,11 +425,11 @@ anova(oneway)
 # Residuals    1445 2345437475863    1623140122                                    
 # ---
 # Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-towway <- lm(SalePrice ~ LotArea+Bedrooms+GarageArea+OverallCond+OverallQual+housetype+YearBuilt+YearRemodAdd+YrSold+HalfBath+FullBath+Garage+HouseAge+
+twoway <- lm(SalePrice ~ LotArea+Bedrooms+GarageArea+OverallCond+OverallQual+housetype+YearBuilt+YearRemodAdd+YrSold+HalfBath+FullBath+Garage+HouseAge+
                Garage*LotArea+Garage*Bedrooms+Garage*GarageArea+Garage*OverallCond+Garage*OverallQual+Garage*housetype+Garage*YearBuilt+Garage*YearRemodAdd+Garage*YrSold+Garage*HalfBath+Garage*FullBath+Garage*HouseAge+
                housetype*LotArea+housetype*Bedrooms+housetype*GarageArea+housetype*OverallCond+housetype*OverallQual+housetype*YearBuilt+housetype*YearRemodAdd+housetype*YrSold+housetype*HalfBath+housetype*FullBath+housetype*HouseAge, 
            data=ameshousing)
-anova(towway)
+anova(twoway)
 # Analysis of Variance Table
 # Response: SalePrice
 #                         Df        Sum Sq       Mean Sq   F value                Pr(>F)    
