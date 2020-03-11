@@ -291,10 +291,9 @@ agg <- df2 %>% group_by(stade, delai) %>% summarise(n = n(),
 xtabs(mean ~ stade + delai, as.data.frame(agg))
 #      delai
 # stade           3           1           2
-#     2  0.26062500  0.32529412 -0.78315789
 #     1  0.02263158 -0.43500000  0.49111111
+#     2  0.26062500  0.32529412 -0.78315789
 
-table(agg)
 aggregate(df2$eval, list(df2$stade, df2$delai), mean)
 
 sapply(df2, class)

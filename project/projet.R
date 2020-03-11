@@ -398,118 +398,73 @@ colnames(ameshousing)
 
 sapply(ameshousing, class)
 
-ameshousing$housetype <- factor(ameshousing$housetype)
-ameshousing$Garage <- factor(ameshousing$Garage)
+ameshousing$housetype <- factor(ameshousing$housetype) #<<<<<
+ameshousing$Garage <- factor(ameshousing$Garage)       #<<<<<
 ameshousing$status <- factor(ameshousing$status)
 ameshousing$isRemod <- factor(ameshousing$isRemod)
 ameshousing$isNew <- factor(ameshousing$isNew)
-mod <- lm(SalePrice ~ LotArea+Bedrooms+GarageArea+OverallCond+OverallQual+housetype+YearBuilt+YearRemodAdd+
-            YrSold+HalfBath+FullBath+Garage+status+HouseAge+RemodAge+isRemod+isNew, data=ameshousing)
-summary(mod)
-# Residuals:
-#     Min      1Q  Median      3Q     Max 
-# -330587  -22626   -2217   17417  363831 
-# Coefficients: (3 not defined because of singularities)
-# Estimate   Std. Error t value             Pr(>|t|)    
-# (Intercept)      682429.3445 1581067.0799   0.432             0.666078    
-# LotArea               0.9137       0.1105   8.269 0.000000000000000303 ***
-# Bedrooms           2010.0937    1476.8572   1.361             0.173707    
-# GarageArea           81.9923       7.2620  11.291 < 0.0000000000000002 ***
-# OverallCond        2749.0329    1118.5125   2.458             0.014098 *  
-# OverallQual       29540.7575    1111.6538  26.574 < 0.0000000000000002 ***
-# housetype2fmCon  -15278.8453    7534.9036  -2.028             0.042770 *  
-# housetypeDuplex  -17869.7978    5981.0395  -2.988             0.002858 ** 
-# housetypeTwnhs   -21151.8490    3860.3669  -5.479 0.000000050344996787 ***
-# YearBuilt           231.4288      65.6361   3.526             0.000435 ***
-# YearRemodAdd        -51.3580      79.1427  -0.649             0.516488    
-# YrSold             -577.9289     787.6423  -0.734             0.463223    # HalfBath          12688.5513    2034.9137   6.235 0.000000000590578545 ***
-# FullBath          22101.5798    1879.3478  11.760 < 0.0000000000000002 ***
-# Garage1           26475.9859    5623.1250   4.708 0.000002736703209979 ***
-# statusNew         16142.0790    5505.9404   2.932             0.003424 ** 
-# statusRemodled   254493.8621   40031.5705   6.357 0.000000000274819528 ***
-# HouseAge                  NA           NA      NA                   NA    
-# RemodAge                  NA           NA      NA                   NA    
-# isRemod1        -240660.8884   39965.6387  -6.022 0.000000002186465026 ***
-# isNew1                    NA           NA      NA                   NA  
-# ---
-# Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-# Residual standard error: 39440 on 1442 degrees of freedom
-# Multiple R-squared:  0.7564,	Adjusted R-squared:  0.7536 
-# F-statistic: 263.5 on 17 and 1442 DF,  p-value: < 0.00000000000000022
-mod1 <- lm(SalePrice ~ LotArea+Bedrooms+GarageArea+OverallCond+OverallQual+housetype+YearBuilt+YearRemodAdd+
-                  YrSold+HalfBath+FullBath+Garage+status+isRemod, data=ameshousing)
-# Residuals:
-#     Min      1Q  Median      3Q     Max 
-# -330587  -22626   -2217   17417  363831 
-# Coefficients:
-# Estimate   Std. Error t value             Pr(>|t|)    
-# (Intercept)      682429.3445 1581067.0799   0.432             0.666078    
-# LotArea               0.9137       0.1105   8.269 0.000000000000000303 ***
-# Bedrooms           2010.0937    1476.8572   1.361             0.173707    
-# GarageArea           81.9923       7.2620  11.291 < 0.0000000000000002 ***
-# OverallCond        2749.0329    1118.5125   2.458             0.014098 *  
-# OverallQual       29540.7575    1111.6538  26.574 < 0.0000000000000002 ***
-# housetype2fmCon  -15278.8453    7534.9036  -2.028             0.042770 *  
-# housetypeDuplex  -17869.7978    5981.0395  -2.988             0.002858 ** 
-# housetypeTwnhs   -21151.8490    3860.3669  -5.479 0.000000050344996787 ***
-# YearBuilt           231.4288      65.6361   3.526             0.000435 ***
-# YearRemodAdd        -51.3580      79.1427  -0.649             0.516488    
-# YrSold             -577.9289     787.6423  -0.734             0.463223    
-# HalfBath          12688.5513    2034.9137   6.235 0.000000000590578545 ***
-# FullBath          22101.5798    1879.3478  11.760 < 0.0000000000000002 ***
-# Garage1           26475.9859    5623.1250   4.708 0.000002736703209979 ***
-# statusNew         16142.0790    5505.9404   2.932             0.003424 ** 
-# statusRemodled   254493.8621   40031.5705   6.357 0.000000000274819528 ***
-# isRemod1        -240660.8884   39965.6387  -6.022 0.000000002186465026 ***
-# ---
-# Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-# Residual standard error: 39440 on 1442 degrees of freedom
-# Multiple R-squared:  0.7564,	Adjusted R-squared:  0.7536 
-#F-statistic: 263.5 on 17 and 1442 DF,  p-value: < 0.00000000000000022
-summary(mod1)
-car::vif(mod1)
-#                    GVIF Df GVIF^(1/(2*Df))
-# LotArea        1.141057  1        1.068203
-# Bedrooms       1.361732  1        1.166933
-# GarageArea     2.261633  1        1.503873
-# OverallCond    1.453403  1        1.205572
-# OverallQual    2.217440  1        1.489107
-# housetype      1.683623  3        1.090705
-# YearBuilt      3.686833  1        1.920113
-# YearRemodAdd   2.504604  1        1.582594
-# YrSold         1.026566  1        1.013196
-# HalfBath       1.192358  1        1.091952
-# FullBath       1.775668  1        1.332542
-# Garage         1.555490  1        1.247193
-# status       422.663382  2        4.534179
-# isRemod      374.057694  1       19.340571
-mod2 <- lm(SalePrice ~ LotArea+Bedrooms+GarageArea+OverallCond+OverallQual+housetype+YearBuilt+YearRemodAdd+
-             YrSold+HalfBath+FullBath+Garage+status, data=ameshousing)
-summary(mod2)
-
-par(mfrow = c(2,2)) 
-plot(mod2)
-
-anova(mod2)
+# Forward selection:
+oneway <- lm(SalePrice ~ LotArea+Bedrooms+GarageArea+OverallCond+OverallQual+housetype+YearBuilt+YearRemodAdd+
+             YrSold+HalfBath+FullBath+Garage+HouseAge, data=ameshousing)
+anova(oneway)
 # Analysis of Variance Table
 # Response: SalePrice
 #                Df        Sum Sq       Mean Sq   F value                Pr(>F)    
-# LotArea         1  640993235747  640993235747  402.3315 < 0.00000000000000022 ***
-# Bedrooms        1  174398912096  174398912096  109.4648 < 0.00000000000000022 ***
-# GarageArea      1 3096105112931 3096105112931 1943.3289 < 0.00000000000000022 ***
-# OverallCond     1    1123280993    1123280993    0.7050             0.4012316    
-# OverallQual     1 2536502784215 2536502784215 1592.0839 < 0.00000000000000022 ***
-# housetype       3   32408277420   10802759140    6.7806             0.0001538 ***
-# YearBuilt       1   67986275584   67986275584   42.6729      0.00000000008945 ***
-# YearRemodAdd    1   28001540226   28001540226   17.5757      0.00002928808550 ***
-# YrSold          1     288609829     288609829    0.1812             0.6704491    
-# HalfBath        1   19552949928   19552949928   12.2728             0.0004736 ***
-# FullBath        1  227135635226  227135635226  142.5660 < 0.00000000000000022 ***
-# Garage          1   37977244554   37977244554   23.8371      0.00000116497751 ***
-# status          2   46454638662   23227319331   14.5791      0.00000053890657 ***
-# Residuals    1443 2298982837200    1593196699                                    
-#---
-#  Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-
-
-
+# LotArea         1  640993235747  640993235747  394.9094 < 0.00000000000000022 ***
+# Bedrooms        1  174398912096  174398912096  107.4454 < 0.00000000000000022 ***
+# GarageArea      1 3096105112931 3096105112931 1907.4786 < 0.00000000000000022 ***
+# OverallCond     1    1123280993    1123280993    0.6920             0.4056082    
+# OverallQual     1 2536502784215 2536502784215 1562.7134 < 0.00000000000000022 ***
+# housetype       3   32408277420   10802759140    6.6555             0.0001835 ***
+# YearBuilt       1   67986275584   67986275584   41.8856       0.0000000001322 ***
+# YearRemodAdd    1   28001540226   28001540226   17.2515       0.0000346617705 ***
+# YrSold          1     288609829     288609829    0.1778             0.6733252    
+# HalfBath        1   19552949928   19552949928   12.0464             0.0005342 ***
+# FullBath        1  227135635226  227135635226  139.9359 < 0.00000000000000022 ***
+# Garage          1   37977244554   37977244554   23.3974       0.0000014584802 ***
+# Residuals    1445 2345437475863    1623140122                                    
+# ---
+# Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+towway <- lm(SalePrice ~ LotArea+Bedrooms+GarageArea+OverallCond+OverallQual+housetype+YearBuilt+YearRemodAdd+YrSold+HalfBath+FullBath+Garage+HouseAge+
+               Garage*LotArea+Garage*Bedrooms+Garage*GarageArea+Garage*OverallCond+Garage*OverallQual+Garage*housetype+Garage*YearBuilt+Garage*YearRemodAdd+Garage*YrSold+Garage*HalfBath+Garage*FullBath+Garage*HouseAge+
+               housetype*LotArea+housetype*Bedrooms+housetype*GarageArea+housetype*OverallCond+housetype*OverallQual+housetype*YearBuilt+housetype*YearRemodAdd+housetype*YrSold+housetype*HalfBath+housetype*FullBath+housetype*HouseAge, 
+           data=ameshousing)
+anova(towway)
+# Analysis of Variance Table
+# Response: SalePrice
+#                         Df        Sum Sq       Mean Sq   F value                Pr(>F)    
+# LotArea                   1  640993235747  640993235747  405.1757 < 0.00000000000000022 ***
+# Bedrooms                  1  174398912096  174398912096  110.2386 < 0.00000000000000022 ***
+# GarageArea                1 3096105112931 3096105112931 1957.0668 < 0.00000000000000022 ***
+# OverallCond               1    1123280993    1123280993    0.7100             0.3995766    
+# OverallQual               1 2536502784215 2536502784215 1603.3388 < 0.00000000000000022 ***
+# housetype                 3   32408277420   10802759140    6.8285             0.0001440 ***
+# YearBuilt                 1   67986275584   67986275584   42.9745      0.00000000007772 ***
+# YearRemodAdd              1   28001540226   28001540226   17.6999      0.00002750413195 ***
+# YrSold                    1     288609829     288609829    0.1824             0.6693570    
+# HalfBath                  1   19552949928   19552949928   12.3595             0.0004527 ***
+# FullBath                  1  227135635226  227135635226  143.5738 < 0.00000000000000022 ***
+# Garage                    1   37977244554   37977244554   24.0056      0.00000107209493 ***
+# LotArea:Garage            1      60367369      60367369    0.0382             0.8451533    
+# Bedrooms:Garage           1     813142552     813142552    0.5140             0.4735350    
+# OverallCond:Garage        1   12381910662   12381910662    7.8267             0.0052184 ** 
+# OverallQual:Garage        1   48352729744   48352729744   30.5641      0.00000003846903 ***
+# housetype:Garage          3    1731244758     577081586    0.3648             0.7784518    
+# YearBuilt:Garage          1     952505920     952505920    0.6021             0.4379145    
+# YearRemodAdd:Garage       1      22786346      22786346    0.0144             0.9044891    
+# YrSold:Garage             1      55971133      55971133    0.0354             0.8508295    
+# HalfBath:Garage           1      17418398      17418398    0.0110             0.9164465    
+# FullBath:Garage           1     554817105     554817105    0.3507             0.5538107    
+# LotArea:housetype         3   23683819748    7894606583    4.9902             0.0019071 ** 
+# Bedrooms:housetype        3    4389547868    1463182623    0.9249             0.4279793    
+# GarageArea:housetype      3    9641739467    3213913156    2.0315             0.1076145    
+# OverallCond:housetype     3    1608915023     536305008    0.3390             0.7971389    
+# OverallQual:housetype     3   13433452791    4477817597    2.8305             0.0372545 *  
+# housetype:YearBuilt       3    1047996336     349332112    0.2208             0.8819811    
+# housetype:YearRemodAdd    3     699954041     233318014    0.1475             0.9313226    
+# housetype:YrSold          3    1745130640     581710213    0.3677             0.7763337    
+# housetype:HalfBath        3    1342774152     447591384    0.2829             0.8377574    
+# housetype:FullBath        3    3337064732    1112354911    0.7031             0.5501859    
+# Residuals              1403 2219564187077    1582012963                                    
+# ---
+# Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
