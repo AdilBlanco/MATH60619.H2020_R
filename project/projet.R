@@ -60,11 +60,11 @@ summary(ameshousing)
 # 3rd Qu.:2000   3rd Qu.:2004   3rd Qu.:2009   3rd Qu.:1.0000   3rd Qu.:2.00   3rd Qu.:0.00000
 # Max.   :2010   Max.   :2010   Max.   :2010   Max.   :4.0000   Max.   :6.00   Max.   :1.00000
 
-nrow(ameshousing[ameshousing$YearBuilt==ameshousing$YrSold, ])         # new 64
-nrow(ameshousing[(ameshousing$YearBuilt != ameshousing$YearRemodAdd) & 
-                   (ameshousing$YearBuilt!=ameshousing$YrSold), ])     # remodled 695
-nrow(ameshousing[(ameshousing$YearBuilt == ameshousing$YearRemodAdd) & 
-                   (ameshousing$YearBuilt!=ameshousing$YrSold), ])     # Never remodled 701 
+# nrow(ameshousing[ameshousing$YearBuilt==ameshousing$YrSold, ])         # new 64
+# nrow(ameshousing[(ameshousing$YearBuilt != ameshousing$YearRemodAdd) & 
+#                    (ameshousing$YearBuilt!=ameshousing$YrSold), ])     # remodled 695
+# nrow(ameshousing[(ameshousing$YearBuilt == ameshousing$YearRemodAdd) & 
+#                    (ameshousing$YearBuilt!=ameshousing$YrSold), ])     # Never remodled 701 
 
 # create new column status (new house, old house never emdled & old house remodled )
 ameshousing$status  <- with(ameshousing, ifelse(YearBuilt==YrSold, 
@@ -468,3 +468,12 @@ anova(twoway)
 # Residuals              1403 2219564187077    1582012963                                    
 # ---
 # Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+summary(oneway)
+summary(twoway)
+
+par(mfrow = c(2, 2))
+plot(twoway)
+
+
+
